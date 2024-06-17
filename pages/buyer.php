@@ -77,7 +77,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 	    <div class="app-content pt-3 p-md-3 p-lg-4">
 		    <div class="container-xl">
 			    
-			<button type="button" id="add_user_record" class="btn btn-primary">Add User</button>
+			   
 			    
 		
 				    
@@ -96,12 +96,16 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 												<th class="cell">Role</th>
 												<th class="cell">Name</th>
 												<th class="cell">Username</th>
+												<th class="cell">Auction</th>
 												<th class="cell"></th>
 											</tr>
 										</thead>
 										<tbody>
 										<?php
-                                 $sql = "SELECT * FROM users";
+                                 $sql = "SELECT users.*, buyers.* 
+								 FROM users 
+								 INNER JOIN buyers 
+								 ON users.id = buyers.user_id";
                                  $result = mysqli_query($conn, $sql);
                                  while ($row = mysqli_fetch_array($result)) { ?>	
 											<tr>
@@ -109,8 +113,8 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 												<td class="cell"><span class="truncate"><?php echo $row["role"]; ?></span></td>
 												<td class="cell"><?php echo $row["name"]; ?></td>
 												<td class="cell"><span class="note"><?php echo $row["username"]; ?></span></td>
-												<td class="cell"><a class="btn-sm app-btn-secondary edit" data-id="<?php echo $row["id"]; ?>" href="#">Edit</a></td>
-												<td class="cell"><a class="btn-sm app-btn-secondary delete" data-id="<?php echo $row["id"]; ?>" href="#">Delete</a></td>
+												<td class="cell"><span class="note"><?php echo $row["auction"]; ?></span></td>
+												<td class="cell"><a class="btn-sm app-btn-secondary" id="edit_buyer" href="#">Edit</a></td>
 											</tr>
 										<?php }
                                            ?>
@@ -132,11 +136,12 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 	    
     </div><!--//app-wrapper-->    	
 	
-	<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+	
+	<div class="modal fade" id="buyerModal" tabindex="-1" aria-labelledby="buyerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Record</h5>
+                <h5 class="modal-title" id="buyerModalLabel">Edit Record</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -161,46 +166,6 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="saveBtn">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Add User</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addForm">
-
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="fname" name="fname">
-                    </div>
-					<div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="user_name" name="user_name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="user_role" class="form-label">Role</label>
-                        <select class="form-control" id="user_role" name="user_role">
-							<option value="admin">admin</option>
-							<option value="dealer">dealer</option>
-							<option value="accountant">accountant</option>
-                        </select>
-                    </div>
-					<div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="text" class="form-control" id="password" name="password">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveRecord">Save changes</button>
             </div>
         </div>
     </div>
