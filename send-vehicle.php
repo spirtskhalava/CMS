@@ -1,12 +1,11 @@
 <?php
-// Include database connection
 require_once "db_conn.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve data from form
+
     $auction = isset($_POST['auction']) ? $_POST['auction'] : '';
     $branch = isset($_POST['branch']) ? $_POST['branch'] : '';
     $dest = isset($_POST['dest']) ? $_POST['dest'] : '';
@@ -21,19 +20,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $consignee = isset($_POST['consignee']) ? $_POST['consignee'] : '';
     $user = isset($_POST['user']) ? $_POST['user'] : '';
 
-    // Prepare and execute SQL query
-    $stmt = $conn->prepare("INSERT INTO vehicles (make, model, auction, branch, dest, vin, year, lot, price, dt, buyer_id, consigne_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO vehicles (make, model, auction, branch, dest, vin, year, lot, price, dt, buyer_id, consigne_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
-        // Print detailed error message
         die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
     }
 
-    $stmt->bind_param("ssssssiiisiii", $make, $model, $auction, $branch, $dest, $vin, $year, $lot, $price, $dt, $buyer, $consignee, $user);
+    $stmt->bind_param("ssssssiiisiiis", $make, $model, $auction, $branch, $dest, $vin, $year, $lot, $price, $dt, $buyer, $consignee, $user, "Pending");
 
     if ($stmt->execute()) {
         header("Location: pages/add-vehicle.php");
-        exit(); // Exit to prevent further execution
+        exit();
     } else {
         echo "Error: " . $stmt->error;
     }

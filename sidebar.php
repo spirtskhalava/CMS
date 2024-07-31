@@ -1,3 +1,6 @@
+<?php
+include "db_conn.php";
+?>
 <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
       <li class="nav-item">
@@ -46,16 +49,43 @@
             </span>
             <!--//submenu-arrow-->
          </a>
+         <?php
+        function getCount($status, $mycon) {
+    $userId = intval($_SESSION['id']); // Ensure the ID is an integer
+
+    // Check if $status is an integer or a string and prepare the SQL accordingly
+    if (is_int($status)) {
+        $sql = "SELECT COUNT(id) FROM vehicles WHERE status = $status AND user_id = $userId";
+    } else {
+        // Assuming $status is a string, so we escape it properly
+        $status = mysqli_real_escape_string($mycon, $status);
+        $sql = "SELECT COUNT(id) FROM vehicles WHERE status = '$status' AND user_id = $userId";
+    }
+
+    $result = mysqli_query($mycon, $sql);
+
+    if (!$result) {
+        die('Query failed: ' . mysqli_error($mycon));
+    }
+
+    $row = mysqli_fetch_array($result, MYSQLI_NUM);
+
+    if ($row) {
+        echo $row[0];
+    } else {
+        echo "No results found.";
+    }
+}
+
+          ?>                       
          <!--//nav-link-->
          <div id="submenu-1" class="collapse submenu submenu-1 show" data-bs-parent="#menu-accordion">
             <ul class="submenu-list list-unstyled">
-               <li class="submenu-item"><a class="submenu-link" href="notifications.html">Pending</a></li>
-               <li class="submenu-item"><a class="submenu-link" href="notifications.html">New Orders</a></li>
-               <li class="submenu-item"><a class="submenu-link" href="account.html">Dispatched</a></li>
-               <li class="submenu-item"><a class="submenu-link" href="settings.html">Received</a></li>
-               <li class="submenu-item"><a class="submenu-link" href="settings.html">Loaded</a></li>
-               <li class="submenu-item"><a class="submenu-link" href="settings.html">Open</a></li>
-               <li class="submenu-item"><a class="submenu-link" href="settings.html">History</a></li>
+               <li class="submenu-item"><a class="submenu-link" href="notifications.html">Pending <?php getCount("Pending", $conn); ?></a></li>
+               <li class="submenu-item"><a class="submenu-link" href="notifications.html">New Orders <?php getCount("New", $conn); ?></a></li>
+               <li class="submenu-item"><a class="submenu-link" href="account.html">Dispatched <?php getCount("Dispatched", $conn); ?></a></li>
+               <li class="submenu-item"><a class="submenu-link" href="settings.html">Arrived <?php getCount("Arrived", $conn); ?></a></li>
+   
             </ul>
          </div>
       </li>
