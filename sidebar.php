@@ -81,10 +81,10 @@ include "db_conn.php";
          <!--//nav-link-->
          <div id="submenu-1" class="collapse submenu submenu-1 show" data-bs-parent="#menu-accordion">
             <ul class="submenu-list list-unstyled">
-               <li class="submenu-item"><a class="submenu-link" href="notifications.html">Pending <?php getCount("Pending", $conn); ?></a></li>
-               <li class="submenu-item"><a class="submenu-link" href="notifications.html">New Orders <?php getCount("New", $conn); ?></a></li>
-               <li class="submenu-item"><a class="submenu-link" href="account.html">Dispatched <?php getCount("Dispatched", $conn); ?></a></li>
-               <li class="submenu-item"><a class="submenu-link" href="settings.html">Arrived <?php getCount("Arrived", $conn); ?></a></li>
+               <li class="submenu-item"><a class="submenu-link" href="pending.php">Pending <?php getCount("Pending", $conn); ?></a></li>
+               <li class="submenu-item"><a class="submenu-link" href="new.php">New Orders <?php getCount("New", $conn); ?></a></li>
+               <li class="submenu-item"><a class="submenu-link" href="dispached.php">Dispatched <?php getCount("Dispatched", $conn); ?></a></li>
+               <li class="submenu-item"><a class="submenu-link" href="arrived.php">Arrived <?php getCount("Arrived", $conn); ?></a></li>
    
             </ul>
          </div>

@@ -41,6 +41,45 @@
       <div class="app-content pt-3 p-md-3 p-lg-4">
          <div class="container-xl">
             <div class="row g-4 mb-4">
+            <div class="tab-content" id="orders-table-tab-content">
+			        <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+					    <div class="app-card app-card-orders-table shadow-sm mb-5">
+						    <div class="app-card-body">
+							    <div class="table-responsive">
+							        <table class="table app-table-hover mb-0 text-left">
+										<thead>
+											<tr>
+												<th class="cell">Make</th>
+												<th class="cell">Model</th>
+												<th class="cell">Vin</th>
+												<th class="cell"></th>
+											</tr>
+										</thead>
+										<tbody>
+										<?php
+                                 $sql = "SELECT * FROM vehicles";
+                                 $result = mysqli_query($conn, $sql);
+                                 while ($row = mysqli_fetch_array($result)) { ?>	
+											<tr>
+												<td class="cell"><span class="truncate"><?php echo $row["make"]; ?></span></td>
+												<td class="cell"><?php echo $row["model"]; ?></td>
+												<td class="cell"><span class="note"><?php echo $row["vin"]; ?></span></td>
+												<td class="cell"><a class="btn-sm app-btn-secondary edit" data-id="<?php echo $row["id"]; ?>" href="#">Edit</a></td>
+												<td class="cell"><a class="btn-sm app-btn-secondary delete" data-id="<?php echo $row["id"]; ?>" href="#">Delete</a></td>
+											</tr>
+										<?php }
+                                           ?>
+		
+										</tbody>
+									</table>
+						        </div><!--//table-responsive-->
+						       
+						    </div><!--//app-card-body-->		
+						</div><!--//app-card-->
+						
+			        </div><!--//tab-pane-->
+			        
+				</div>
             </div>
             <!--//container-fluid-->
          </div>
