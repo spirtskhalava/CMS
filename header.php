@@ -4,6 +4,7 @@
                <div class="app-header-content">
                   <div class="row justify-content-between align-items-center">
                      <div class="col-auto">
+                        <?php include "../add_balance.php";?>
                         <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img">
                               <title>Menu</title>
@@ -11,19 +12,10 @@
                            </svg>
                         </a>
                      </div>
-                     <!--//col-->
                      <div class="app-utilities col-auto">
-                        <div class="app-utility-item app-user-dropdown dropdown">
-                           <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><?=$_SESSION['name']?></a>
-                           <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
-                              <li><a class="dropdown-item" href="account.php">Account</a></li>
-                              <li>
-                                 <hr class="dropdown-divider">
-                              </li>
-                              <li><a class="dropdown-item" href="../logout.php">Log Out</a></li>
-                           </ul>
-                        </div>
-                        <!--//app-user-dropdown--> 
+                     <?php
+                   include "../balance.php";
+                   ?>
                      </div>
                      <!--//app-utilities-->
                   </div>

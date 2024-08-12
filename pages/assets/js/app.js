@@ -283,3 +283,19 @@ $('#saveRecord').click(function(e){
         }
     });
 });
+
+function updateDropdownBalance() {
+    $.ajax({
+        url: 'get_balance.php',
+        type: 'GET',
+        success: function(response) {
+            $('#user-dropdown-toggle').html(response);
+        },
+        error: function() {
+            alert('An error occurred while fetching the balance.');
+        }
+    });
+}
+
+// Update balance display when page loads
+updateDropdownBalance();

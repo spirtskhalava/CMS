@@ -5,7 +5,7 @@ include "db_conn.php";
    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
       <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-         <a class="nav-link active" href="dashboard.php">
+         <a class="nav-link active" href="admin.php">
             <span class="nav-icon">
                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 .146.354v7a.5.5 0 0 1-.5.5H9.5a.5.5 0 0 1-.5-.5v-4H7v4a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .146-.354l6-6zM2.5 7.707V14H6v-4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4h3.5V7.707L8 2.207l-5.5 5.5z"/>
@@ -27,6 +27,21 @@ include "db_conn.php";
                </svg>
             </span>
             <span class="nav-link-text">Users</span>
+         </a>
+         <!--//nav-link-->
+      </li>
+      <!--//nav-item-->
+       <!--//nav-item-->
+       <li class="nav-item">
+         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+         <a class="nav-link" href="check_balance.php">
+            <span class="nav-icon">
+               <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+               </svg>
+            </span>
+            <span class="nav-link-text">Balance Request</span>
          </a>
          <!--//nav-link-->
       </li>

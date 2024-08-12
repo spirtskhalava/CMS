@@ -37,6 +37,8 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         		$_SESSION['id'] = $row['id'];
         		$_SESSION['role'] = $row['role'];
         		$_SESSION['username'] = $row['username'];
+				$_SESSION['pbalance'] = $row['pbalance'];
+				$_SESSION['nbalance'] = $row['nbalance'];
 
         		header("Location: redirect.php");
 
