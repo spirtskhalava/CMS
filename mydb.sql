@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:8889
--- Generation Time: Jul 28, 2024 at 07:16 AM
--- Server version: 5.7.39
--- PHP Version: 8.2.0
+-- Host: 127.0.0.1
+-- Generation Time: Aug 12, 2024 at 03:20 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,6 +24,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `balance_requests`
+--
+
+CREATE TABLE `balance_requests` (
+  `id` int(11) NOT NULL,
+  `dealer_id` int(11) NOT NULL,
+  `request_date` date NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `person_name` varchar(255) NOT NULL,
+  `status` enum('pending','confirmed','rejected') DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `balance_requests`
+--
+
+INSERT INTO `balance_requests` (`id`, `dealer_id`, `request_date`, `amount`, `person_name`, `status`) VALUES
+(1, 1, '2024-08-08', 44.00, 'dgdgd', 'confirmed'),
+(2, 1, '2024-08-06', 4444.00, 'dfgd', 'rejected'),
+(3, 1, '2024-08-01', 555.00, 'sgdgfd', 'pending');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `buyers`
 --
 
@@ -32,7 +56,7 @@ CREATE TABLE `buyers` (
   `user_id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
   `auction` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `buyers`
@@ -64,7 +88,7 @@ CREATE TABLE `consignee` (
   `comment` varchar(100) NOT NULL,
   `user_id` int(11) NOT NULL,
   `company` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `consignee`
@@ -90,7 +114,7 @@ INSERT INTO `consignee` (`id`, `status`, `firstname`, `lastname`, `country`, `ci
 CREATE TABLE `countries` (
   `country_code` char(2) NOT NULL,
   `country_name` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `countries`
@@ -345,22 +369,23 @@ INSERT INTO `countries` (`country_code`, `country_name`) VALUES
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `role` enum('dealer','admin','accountant') CHARACTER SET utf8 NOT NULL,
-  `username` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `phone` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `role` enum('dealer','admin','accountant') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `pbalance` decimal(10,0) DEFAULT NULL,
+  `nbalance` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `role`, `username`, `password`, `name`, `phone`) VALUES
-(1, 'admin', 'sandro', 'e2fc714c4727ee9395f324cd2e7f331f', 'sandro pirtskhalava', ''),
-(2, 'dealer', 'john11', 'e2fc714c4727ee9395f324cd2e7f331f', 'john doe', ''),
-(3, 'accountant', 'jim', 'e2fc714c4727ee9395f324cd2e7f331f', 'jim carrey', ''),
-(6, 'dealer', 'sfds', '739417ed7aea826047c699abb81106bd', 'asfds', NULL);
+INSERT INTO `users` (`id`, `role`, `username`, `password`, `name`, `phone`, `pbalance`, `nbalance`) VALUES
+(1, 'admin', 'sandro', 'e2fc714c4727ee9395f324cd2e7f331f', 'sandro pirtskhalava', '', 700, 300),
+(3, 'accountant', 'jim', 'e2fc714c4727ee9395f324cd2e7f331f', 'jim carrey', '', 0, 0),
+(6, 'dealer', 'sfds', '739417ed7aea826047c699abb81106bd', 'asfds', NULL, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -382,19 +407,29 @@ CREATE TABLE `vehicles` (
   `dt` date NOT NULL,
   `buyer_id` int(11) NOT NULL,
   `consigne_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `user_id` int(11) NOT NULL,
+  `status` text NOT NULL,
+  `image_paths` varchar(500) DEFAULT NULL,
+  `debt` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `vehicles`
 --
 
-INSERT INTO `vehicles` (`id`, `make`, `model`, `auction`, `branch`, `dest`, `vin`, `year`, `lot`, `price`, `dt`, `buyer_id`, `consigne_id`, `user_id`) VALUES
-(1, 'BMW', '4 Series Gran Coupe', 'IAAI', 'ACE - Carson - California - IAAI', 'POTI', 'WBA4J1C00LBU68056', 2020, 444, 444, '2024-04-03', 1, 7, 1);
+INSERT INTO `vehicles` (`id`, `make`, `model`, `auction`, `branch`, `dest`, `vin`, `year`, `lot`, `price`, `dt`, `buyer_id`, `consigne_id`, `user_id`, `status`, `image_paths`, `debt`) VALUES
+(1, 'BMW', '4 Series Gran Coupe', 'COPART', 'ACE - Carson - California - IAAI', 'POTI', 'WBA4J1C00LBU68056', 2020, 1, 5000, '2024-04-03', 1, 7, 1, 'Pending', './uploads/66b9e65b03de2.jpg,./uploads/66b9e65b0423c.jpg,./uploads/66b9e65b045d4.jpg', 0);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `balance_requests`
+--
+ALTER TABLE `balance_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `dealer_id` (`dealer_id`);
 
 --
 -- Indexes for table `buyers`
@@ -431,6 +466,12 @@ ALTER TABLE `vehicles`
 --
 
 --
+-- AUTO_INCREMENT for table `balance_requests`
+--
+ALTER TABLE `balance_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `buyers`
 --
 ALTER TABLE `buyers`
@@ -452,7 +493,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `balance_requests`
+--
+ALTER TABLE `balance_requests`
+  ADD CONSTRAINT `balance_requests_ibfk_1` FOREIGN KEY (`dealer_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "../db_conn.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -18,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("di", $request['amount'], $request['dealer_id']);
     $stmt->execute();
 
-     $_SESSION['balance'] += $request['amount'];
+     $_SESSION['pbalance'] += $request['amount'];
 
     // Update the request status
     $sql = "UPDATE balance_requests SET status = 'confirmed' WHERE id = ?";

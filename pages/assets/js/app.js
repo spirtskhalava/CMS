@@ -124,6 +124,29 @@ function fetchAuction() {
 }
 fetchAuction();
 
+if (document.getElementById("result")) {
+    var dropdown = document.getElementById('result');
+    var saveForm = document.getElementById('saveForm');
+
+    // Add event listener for change event
+    dropdown.addEventListener('change', function (e) {
+        var url = 'cms/../../createInput.php?param=' + encodeURIComponent(e.target.value);
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'nprice';
+                hiddenInput.value = data;
+                saveForm.appendChild(hiddenInput);
+            })
+            .catch(error => {
+                console.log("error", error);
+            });
+
+    });
+}
+
 function lookupVIN() {
     const vinInput = document.getElementById("vinInput").value;
     const apiKey = "ZrQEPSkKc2FuZHJvMTIxMUBnbWFpbC5jb20=";
@@ -286,9 +309,9 @@ $('#saveRecord').click(function(e){
 
 function updateDropdownBalance() {
     $.ajax({
-        url: 'get_balance.php',
+        url: '../get_balance.php',
         type: 'GET',
-        success: function(response) {
+        success: function (response) {
             $('#user-dropdown-toggle').html(response);
         },
         error: function() {
@@ -297,5 +320,17 @@ function updateDropdownBalance() {
     });
 }
 
-// Update balance display when page loads
 updateDropdownBalance();
+
+$('#submitRequest').click(function () {
+    var formData = $('#balanceRequestForm').serialize();
+    $.ajax({
+        url: '../add_balance_request.php',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            alert('Request submitted successfully');
+            window.location.reload();
+        }
+    });
+});

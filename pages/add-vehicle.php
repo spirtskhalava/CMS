@@ -45,7 +45,7 @@
          <div class="container-xl">
             <div class="row g-4 mb-4">
                <h2 class="mt-5">Add Form</h2>
-               <form action="../send-vehicle.php" method="post">
+               <form action="../send-vehicle.php" method="post" id="saveForm">
                 <!--
                   <div class="mb-3">
                      <select class="form-select" id="brandDropdown" aria-label="Default select example" onchange="populateModels()">
@@ -83,7 +83,6 @@
                      <input type="text" class="form-control" name="vin" id="vinInput" placeholder="Enter Vin" aria-label="Recipient's username" aria-describedby="button-addon2">
                      <button class="btn btn-primary" type="button" onclick="lookupVIN();">Button</button>
                   </div>
-            </div>
             <div class="mb-3">
             <input class="form-control" type="text" name="make" id="make" placeholder="Make" aria-label="default input example">
             </div>

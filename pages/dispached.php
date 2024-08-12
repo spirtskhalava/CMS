@@ -32,6 +32,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 		            <div class="row justify-content-between align-items-center">
 			        
 				    <div class="col-auto">
+                        <?php include "../add_balance.php";?>
 					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
 						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
 					    </a>
@@ -53,7 +54,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 	        <div class="sidepanel-inner d-flex flex-column">
 		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
 		        <div class="app-branding">
-		            <a class="app-logo" href="index.html"><img class="logo-icon me-2" src="assets/images/app-logo.svg" alt="logo"><span class="logo-text">PORTAL</span></a>
+		            <a class="app-logo" href="/"><img class="logo-icon me-2" src="assets/images/app-logo.svg" alt="logo"><span class="logo-text">PORTAL</span></a>
 	
 		        </div><!--//app-branding-->  
 		        

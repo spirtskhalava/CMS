@@ -52,20 +52,22 @@
 												<th class="cell">Make</th>
 												<th class="cell">Model</th>
 												<th class="cell">Vin</th>
+                                    <th class="cell">Debt</th>
 												<th class="cell"></th>
 											</tr>
 										</thead>
 										<tbody>
 										<?php
-                                 $sql = "SELECT * FROM vehicles";
+                                 $userId = intval($_SESSION['id']);
+                                 $sql = "SELECT * FROM vehicles WHERE user_id = '$userId'";
                                  $result = mysqli_query($conn, $sql);
                                  while ($row = mysqli_fetch_array($result)) { ?>	
 											<tr>
 												<td class="cell"><span class="truncate"><?php echo $row["make"]; ?></span></td>
 												<td class="cell"><?php echo $row["model"]; ?></td>
-												<td class="cell"><span class="note"><?php echo $row["vin"]; ?></span></td>
-												<td class="cell"><a class="btn-sm app-btn-secondary edit" data-id="<?php echo $row["id"]; ?>" href="#">Edit</a></td>
-												<td class="cell"><a class="btn-sm app-btn-secondary delete" data-id="<?php echo $row["id"]; ?>" href="#">Delete</a></td>
+                                    <td class="cell"><span class="note"><?php echo $row["vin"]; ?></span></td>
+												<td class="cell"><span class="note"><?php echo $row["debt"]; ?><br><input type="text" id="dept"><br><button type="button" class="btn btn-primary" id="pay">pay</span><input type="hidden" id="vehicleid" name="vehicleid" value="<?=$row['id'] ?>"></td>
+												<td class="cell"><a class="btn-sm app-btn-secondary edit" data-id="<?php echo $row["id"]; ?>" href="edit-vehicle.php?id=<?=$row["id"]; ?>">Edit</a><a class="btn-sm app-btn-secondary delete" data-id="<?php echo $row["id"]; ?>" href="delete_vehicle.php?id=<?=$row["id"]; ?>">Delete</a></td>
 											</tr>
 										<?php }
                                            ?>
@@ -91,6 +93,31 @@
       <script src="assets/plugins/popper.min.js"></script>
       <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
       <script src="assets/js/app.js"></script> 
+      <script>
+      document.getElementById('pay').addEventListener('click', function(event) {
+       event.preventDefault();
+        var sum = document.getElementById('dept').value;
+        var vehicleid=document.getElementById('vehicleid').value;
+        fetch('pay.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'id':vehicleid,
+                'sum': sum
+            })
+        })
+        .then(response => response.text())
+        .then(data => {
+          location.reload();
+         console.log(data);
+        })
+        .catch(error => {
+           console.log(error);
+        });
+    });
+      </script>
    </body>
 </html>
 <?php }else{

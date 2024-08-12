@@ -1,8 +1,28 @@
 <?php
 include "db_conn.php";
 ?>
+ <style>
+        .input-group .btn {
+            border: 0;
+        }
+        .input-group .btn i {
+            font-size: 1rem;
+        }
+    </style>
 <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+   <li class="nav-item">
+    <div class="container mt-4 mb-2">
+        <form id="searchForm" action="search_results.php" method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Enter VIN">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+      </li>
       <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
          <a class="nav-link active" href="admin.php">
@@ -31,6 +51,26 @@ include "db_conn.php";
          <!--//nav-link-->
       </li>
       <!--//nav-item-->
+      <?php
+        function getRequestCount($mycon) {
+    $sql = "SELECT COUNT(id) FROM balance_requests WHERE status = 'pending'";  
+
+    $result = mysqli_query($mycon, $sql);
+
+    if (!$result) {
+        die('Query failed: ' . mysqli_error($mycon));
+    }
+
+    $row = mysqli_fetch_array($result, MYSQLI_NUM);
+
+    if ($row) {
+        echo $row[0];
+    } else {
+        echo "No results found.";
+    }
+}
+
+          ?>    
        <!--//nav-item-->
        <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
@@ -41,7 +81,7 @@ include "db_conn.php";
                   <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
                </svg>
             </span>
-            <span class="nav-link-text">Balance Request</span>
+            <span class="nav-link-text">Balance Request <?php getRequestCount($conn); ?></span>
          </a>
          <!--//nav-link-->
       </li>

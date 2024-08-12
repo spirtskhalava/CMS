@@ -2,16 +2,16 @@
 <form action="submit_balance_request.php" method="post" id="balanceRequestForm">
 <div class="input-group mb-3">
 <input type="hidden" id="dealerId" name="dealer_id" value="<?php echo $_SESSION['id']; ?>">
-        <input type="date" class="form-control" id="date" name="date">
+        <input type="date" class="form-control border-2" id="date" name="date">
 
-        <input type="text" id="amount" name="amount" class="form-control">
-        <input type="text" id="user" name="user" class="form-control">
+        <input type="text" id="amount" name="amount" class="form-control border-2">
+        <input type="text" id="user" name="user" class="form-control border-2">
 
-        <button type="button" class="btn btn-primary" id="submitRequest">Submit Request</button>
+        <button type="button" class="btn btn-primary border-2" id="submitRequest">Submit Request</button>
     </div>
     </form>
 </div>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
+<!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
 <script>
     $('#submitRequest').click(function(){
     var formData = $('#balanceRequestForm').serialize();
@@ -21,7 +21,8 @@
         data: formData,
         success: function(response){
             alert('Request submitted successfully');
+            window.location.reload();
         }
     });
 });
-</script>
+</script> -->

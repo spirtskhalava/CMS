@@ -2,12 +2,21 @@
 session_start();
 include "db_conn.php";
 
+
 $dealer_id = intval($_SESSION['id']);
 
 // Fetch the balance from the database
-$stmt = $conn->prepare("SELECT balance FROM dealers WHERE id = ?");
+$stmt = $conn->prepare("SELECT pbalance FROM users WHERE id = ?");
+if ($stmt === false) {
+    die("Prepare failed: " . $conn->error);
+}
+
 $stmt->bind_param("i", $dealer_id);
-$stmt->execute();
+
+if (!$stmt->execute()) {
+    die("Execute failed: " . $stmt->error);
+}
+
 $stmt->bind_result($balance);
 $stmt->fetch();
 
