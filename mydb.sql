@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 12, 2024 at 03:20 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Host: localhost:8889
+-- Generation Time: Aug 13, 2024 at 09:17 AM
+-- Server version: 5.7.39
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,16 +34,17 @@ CREATE TABLE `balance_requests` (
   `amount` decimal(10,2) NOT NULL,
   `person_name` varchar(255) NOT NULL,
   `status` enum('pending','confirmed','rejected') DEFAULT 'pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `balance_requests`
 --
 
 INSERT INTO `balance_requests` (`id`, `dealer_id`, `request_date`, `amount`, `person_name`, `status`) VALUES
-(1, 1, '2024-08-08', 44.00, 'dgdgd', 'confirmed'),
-(2, 1, '2024-08-06', 4444.00, 'dfgd', 'rejected'),
-(3, 1, '2024-08-01', 555.00, 'sgdgfd', 'pending');
+(1, 1, '2024-08-08', '44.00', 'dgdgd', 'confirmed'),
+(2, 1, '2024-08-06', '4444.00', 'dfgd', 'rejected'),
+(3, 1, '2024-08-01', '555.00', 'sgdgfd', 'rejected'),
+(4, 1, '2024-08-06', '500.00', 'sandro', 'confirmed');
 
 -- --------------------------------------------------------
 
@@ -56,7 +57,7 @@ CREATE TABLE `buyers` (
   `user_id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
   `auction` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `buyers`
@@ -88,7 +89,7 @@ CREATE TABLE `consignee` (
   `comment` varchar(100) NOT NULL,
   `user_id` int(11) NOT NULL,
   `company` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `consignee`
@@ -114,7 +115,7 @@ INSERT INTO `consignee` (`id`, `status`, `firstname`, `lastname`, `country`, `ci
 CREATE TABLE `countries` (
   `country_code` char(2) NOT NULL,
   `country_name` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `countries`
@@ -364,28 +365,68 @@ INSERT INTO `countries` (`country_code`, `country_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fines`
+--
+
+CREATE TABLE `fines` (
+  `id` int(11) NOT NULL,
+  `vehicle_id` int(11) NOT NULL,
+  `debt` decimal(10,0) NOT NULL,
+  `comment` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `fines`
+--
+
+INSERT INTO `fines` (`id`, `vehicle_id`, `debt`, `comment`) VALUES
+(5, 1, '100', 'sdfsfds');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `details` text,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `logs`
+--
+
+INSERT INTO `logs` (`id`, `user_id`, `action`, `details`, `timestamp`) VALUES
+(3, 1, 'Payment', 'User ID 1 paid 100 for vehicle ID 10', '2024-08-13 08:42:19');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `role` enum('dealer','admin','accountant') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `role` enum('dealer','admin','accountant') CHARACTER SET utf8 NOT NULL,
+  `username` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
   `phone` varchar(50) DEFAULT NULL,
   `pbalance` decimal(10,0) DEFAULT NULL,
   `nbalance` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `role`, `username`, `password`, `name`, `phone`, `pbalance`, `nbalance`) VALUES
-(1, 'admin', 'sandro', 'e2fc714c4727ee9395f324cd2e7f331f', 'sandro pirtskhalava', '', 700, 300),
-(3, 'accountant', 'jim', 'e2fc714c4727ee9395f324cd2e7f331f', 'jim carrey', '', 0, 0),
-(6, 'dealer', 'sfds', '739417ed7aea826047c699abb81106bd', 'asfds', NULL, 0, 0);
+(1, 'admin', 'sandro', 'e2fc714c4727ee9395f324cd2e7f331f', 'sandro pirtskhalava', '', '1250', 300),
+(7, 'dealer', 'root', '2c6db08891fd412aaaf76587520787a9', 'root', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -410,15 +451,22 @@ CREATE TABLE `vehicles` (
   `user_id` int(11) NOT NULL,
   `status` text NOT NULL,
   `image_paths` varchar(500) DEFAULT NULL,
-  `debt` int(11) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `debt` int(11) DEFAULT '0',
+  `booking_id` int(20) NOT NULL,
+  `container_id` int(200) NOT NULL,
+  `personal_id` varchar(50) NOT NULL,
+  `first_name` text NOT NULL,
+  `last_name` text NOT NULL,
+  `has_key` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `vehicles`
 --
 
-INSERT INTO `vehicles` (`id`, `make`, `model`, `auction`, `branch`, `dest`, `vin`, `year`, `lot`, `price`, `dt`, `buyer_id`, `consigne_id`, `user_id`, `status`, `image_paths`, `debt`) VALUES
-(1, 'BMW', '4 Series Gran Coupe', 'COPART', 'ACE - Carson - California - IAAI', 'POTI', 'WBA4J1C00LBU68056', 2020, 1, 5000, '2024-04-03', 1, 7, 1, 'Pending', './uploads/66b9e65b03de2.jpg,./uploads/66b9e65b0423c.jpg,./uploads/66b9e65b045d4.jpg', 0);
+INSERT INTO `vehicles` (`id`, `make`, `model`, `auction`, `branch`, `dest`, `vin`, `year`, `lot`, `price`, `dt`, `buyer_id`, `consigne_id`, `user_id`, `status`, `image_paths`, `debt`, `booking_id`, `container_id`, `personal_id`, `first_name`, `last_name`, `has_key`) VALUES
+(1, 'BMW', '4 Series Gran Coupe', 'COPART', 'ACE - Carson - California - IAAI', 'POTI', 'WBA4J1C00LBU68056', 2020, 1, 5000, '2024-04-03', 1, 7, 1, 'Pending', './uploads/66b9e65b03de2.jpg,./uploads/66b9e65b0423c.jpg,./uploads/66b9e65b045d4.jpg', 0, 123, 534535353, '01008049449', 'sandro', 'pirtskhalava', 'Yes'),
+(10, 'Pontiac', 'Grand Am', 'IAAI', 'LEE\'S TOWING KAUAI - Hawaii - IAAI', '', '1G2NE55D5SM534479', 1995, 34242, 14000, '2024-08-01', 1, 0, 1, 'Pending', NULL, 0, 3453, 235353, '2424353534', 'John', 'Smith', NULL);
 
 --
 -- Indexes for dumped tables
@@ -450,6 +498,18 @@ ALTER TABLE `countries`
   ADD PRIMARY KEY (`country_code`);
 
 --
+-- Indexes for table `fines`
+--
+ALTER TABLE `fines`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -469,7 +529,7 @@ ALTER TABLE `vehicles`
 -- AUTO_INCREMENT for table `balance_requests`
 --
 ALTER TABLE `balance_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `buyers`
@@ -484,16 +544,28 @@ ALTER TABLE `consignee`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `fines`
+--
+ALTER TABLE `fines`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
