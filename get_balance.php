@@ -21,7 +21,7 @@ $stmt->bind_result($balance);
 $stmt->fetch();
 
 if ($balance === null) {
-    echo "Balance not found.";
+    echo $_SESSION["name"] . " - " . number_format(0, 2) . "$";
 } else {
     echo $_SESSION["name"] . " - " . number_format($balance, 2) . "$";
 }

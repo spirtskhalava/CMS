@@ -116,7 +116,12 @@
                                  </thead>
                                  <tbody>
                                     <?php
-                                       $sql = "SELECT * FROM vehicles where status='Pending'";
+                                       $userId = intval($_SESSION['id']);
+                                       if($_SESSION['role']=='admin'){
+                                          $sql = "SELECT * FROM vehicles where status='Pending'";
+                                       }else{
+                                          $sql = "SELECT * FROM vehicles where status='Pending' AND user_id = '$userId'";
+                                      }
                                        $result = mysqli_query($conn, $sql);
                                        while ($row = mysqli_fetch_array($result)) { ?>	
                                     <tr>
@@ -141,7 +146,7 @@
                                           <span class="note">
                                              <?php echo $row["debt"]; ?><br><input type="text" id="dept"><br>
                                              <button type="button" class="btn btn-primary" id="pay">
-                                                pay
+                                                Pay
                                           </span>
                                           <input type="hidden" id="vehicleid" name="vehicleid" value="<?=$row['id'] ?>">
                                        </td>

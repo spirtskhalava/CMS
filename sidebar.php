@@ -36,6 +36,7 @@ include "db_conn.php";
          </a>
          <!--//nav-link-->
       </li>
+     <?php if($_SESSION['role']=='admin') {?> 
       <!--//nav-item-->
       <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
@@ -51,6 +52,7 @@ include "db_conn.php";
          <!--//nav-link-->
       </li>
       <!--//nav-item-->
+      <?php }?> 
       <?php
         function getRequestCount($mycon) {
     $sql = "SELECT COUNT(id) FROM balance_requests WHERE status = 'pending'";  
@@ -71,33 +73,39 @@ include "db_conn.php";
 }
 
           ?>    
+       <?php if($_SESSION['role']=='admin') {?>    
        <!--//nav-item-->
        <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
          <a class="nav-link" href="check_balance.php">
-            <span class="nav-icon">
-               <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+         <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
                </svg>
             </span>
             <span class="nav-link-text">Balance Request <?php getRequestCount($conn); ?></span>
          </a>
          <!--//nav-link-->
       </li>
+      <?php } ?> 
+
+      <?php if($_SESSION['role']=='admin') {?>  
       <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
          <a class="nav-link" href="fines.php">
-            <span class="nav-icon">
-               <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+         <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
                </svg>
             </span>
             <span class="nav-link-text">Fines</span>
          </a>
          <!--//nav-link-->
       </li>
+
+      <?php } ?> 
       <!--//nav-item-->
       <li class="nav-item has-submenu">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
@@ -123,11 +131,19 @@ include "db_conn.php";
 
     // Check if $status is an integer or a string and prepare the SQL accordingly
     if (is_int($status)) {
-        $sql = "SELECT COUNT(id) FROM vehicles WHERE status = $status AND user_id = $userId";
+      if($_SESSION['role']=='admin'){
+         $sql = "SELECT COUNT(id) FROM vehicles WHERE status = $status";
+      }else{
+         $sql = "SELECT COUNT(id) FROM vehicles WHERE status = $status AND user_id = $userId";
+     }
     } else {
         // Assuming $status is a string, so we escape it properly
         $status = mysqli_real_escape_string($mycon, $status);
-        $sql = "SELECT COUNT(id) FROM vehicles WHERE status = '$status' AND user_id = $userId";
+        if($_SESSION['role']=='admin'){
+         $sql = "SELECT COUNT(id) FROM vehicles WHERE status = '$status'";
+      }else{
+         $sql = "SELECT COUNT(id) FROM vehicles WHERE status = '$status' AND user_id = $userId";
+     }
     }
 
     $result = mysqli_query($mycon, $sql);
@@ -172,7 +188,8 @@ include "db_conn.php";
          <!--//nav-link-->
       </li>
       <!--//nav-item-->
-      <!--//nav-item-->			
+      <!--//nav-item-->		
+      <?php if($_SESSION['role']=='admin') {?>  	
       <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
          <a class="nav-link" href="add-buyer.php">
@@ -187,6 +204,9 @@ include "db_conn.php";
          <!--//nav-link-->
       </li>
       <!--//nav-item-->
+      <?php } ?> 
+
+      <?php if($_SESSION['role']=='admin') {?> 
       <!--//nav-item-->			
       <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
@@ -201,6 +221,7 @@ include "db_conn.php";
          </a>
          <!--//nav-link-->
       </li>
+      <?php } ?> 
       <!--//nav-item-->
    </ul>
    <!--//app-menu-->

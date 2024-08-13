@@ -116,7 +116,12 @@
                                     </thead>
                                     <tbody>
                                        <?php
-                                          $sql = "SELECT * FROM vehicles where status='New'";
+                                          $userId = intval($_SESSION['id']);
+                                          if($_SESSION['role']=='admin'){
+                                             $sql = "SELECT * FROM vehicles where status='New'";
+                                          }else{
+                                             $sql = "SELECT * FROM vehicles where status='New' AND user_id = '$userId'";
+                                         }
                                           $result = mysqli_query($conn, $sql);
                                           while ($row = mysqli_fetch_array($result)) { ?>	
                                        <tr>

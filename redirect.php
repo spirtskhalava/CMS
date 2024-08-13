@@ -9,8 +9,8 @@
 			header("Location: pages/admin.php");
       	 }
 		 //teacher
-		 else if ($_SESSION['role'] == 'seller'){ 
-			header("Location: pages/seller.php");
+		 else if ($_SESSION['role'] == 'dealer'){ 
+			header("Location: pages/admin.php");
       	} 
 		//student
 		  else if ($_SESSION['role'] == 'accountant'){ 

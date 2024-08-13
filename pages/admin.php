@@ -90,7 +90,11 @@
 										<tbody>
 										<?php
                                  $userId = intval($_SESSION['id']);
+                                 if($_SESSION['role']=='admin'){
+                                    $sql = "SELECT * FROM vehicles";
+                                 }else{
                                  $sql = "SELECT * FROM vehicles WHERE user_id = '$userId'";
+                                }
                                  $result = mysqli_query($conn, $sql);
                                  while ($row = mysqli_fetch_array($result)) { ?>	
 											<tr>
@@ -108,7 +112,7 @@
                                     <td class="cell"><span class="note"><?php echo $row["personal_id"]; ?></span></td>
                                     <td class="cell"><span class="note"><?php echo $row["first_name"]; ?></span></td>
                                     <td class="cell"><span class="note"><?php echo $row["last_name"]; ?></span></td>
-												<td class="cell"><input type="hidden" id="vehicleID" value="<?php echo $row["id"]; ?>">  <button class="icon-button" id="icon-button">
+												<td class="cell"><input type="hidden" data-id="<?php echo $row["id"]; ?>" value="<?php echo $row["id"]; ?>">  <button class="icon-button" id="icon-button">
                             <i class="fas fa-info-circle"></i>
                         </button><span class="note"><?php echo $row["debt"]; ?><br><input type="text" id="dept"><br><button type="button" class="btn btn-primary" id="pay">pay</span><input type="hidden" id="vehicleid" name="vehicleid" value="<?=$row['id'] ?>"></td>
 												<td class="cell"><a class="btn-sm app-btn-secondary edit" data-id="<?php echo $row["id"]; ?>" href="edit-vehicle.php?id=<?=$row["id"]; ?>">Edit</a><a class="btn-sm app-btn-secondary delete" data-id="<?php echo $row["id"]; ?>" href="delete_vehicle.php?id=<?=$row["id"]; ?>">Delete</a></td>
@@ -195,13 +199,14 @@
 }
 
 if(document.getElementById('icon-button')){
-    document.getElementById('icon-button').addEventListener('click', function(event) {
-      event.preventDefault();
-         const vehicleID = document.getElementById("vehicleID").value;
-         fetch(`get_vehicle_info.php?id=${vehicleID}`)
-            .then(response => response.json())
-            .then(data => {
-               const modalTableBody = document.getElementById('modalTableBody');
+     const iconButtons = document.getElementsByClassName('icon-button');
+    Array.from(iconButtons).forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            fetch(`get_vehicle_info.php?id=${button.previousElementSibling.value}`)
+                .then(response => response.json())
+                .then(data => {
+                    const modalTableBody = document.getElementById('modalTableBody');
                     modalTableBody.innerHTML = ''; // Clear previous content
 
                     if (Array.isArray(data) && data.length > 0) {
@@ -219,11 +224,12 @@ if(document.getElementById('icon-button')){
 
                     const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
                     infoModal.show();
-            })
-            .catch(error => {
-                  console.error('Error:', error);
-            });
-         });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
         }
       </script>
    </body>

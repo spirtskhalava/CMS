@@ -21,7 +21,7 @@ $stmt->bind_result($balance);
 $stmt->fetch();
 
 if ($balance === null) {
-    echo "Balance not found.";
+    echo "Debt - " . number_format(0, 2) . "$";
 } else {
     echo "Debt - " . number_format($balance, 2) . "$";
 }
