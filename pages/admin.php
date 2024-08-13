@@ -17,6 +17,26 @@
       <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
       <!-- App CSS -->  
       <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+      <style>
+          .icon-button {
+            background: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 50%; /* Makes the button round */
+            width: 25px; /* Button width */
+            height: 25px; /* Button height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem; /* Icon size */
+            padding: 0;
+            line-height: 1;
+        }
+        .icon-button:hover {
+            background: #0056b3;
+        }
+      </style>   
    </head>
    <body class="app">
       <header class="app-header fixed-top">
@@ -39,7 +59,7 @@
       <!--//app-header-->
       <div class="app-wrapper">
       <div class="app-content pt-3 p-md-3 p-lg-4">
-         <div class="container-xl">
+         <div class="container-fluid">
             <div class="row g-4 mb-4">
             <div class="tab-content" id="orders-table-tab-content">
 			        <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
@@ -52,6 +72,17 @@
 												<th class="cell">Make</th>
 												<th class="cell">Model</th>
 												<th class="cell">Vin</th>
+                                    <th class="cell">Branch</th>
+                                    <th class="cell">Auction</th>
+                                    <th class="cell">Lot</th>
+                                    <th class="cell">Price</th>
+                                    <th class="cell">Date</th>
+                                    <th class="cell">Status</th>
+                                    <th class="cell">Booking ID</th>
+                                    <th class="cell">Container ID</th>
+                                    <th class="cell">Personal ID</th>
+                                    <th class="cell">First Name</th>
+                                    <th class="cell">Last Name</th>
                                     <th class="cell">Debt</th>
 												<th class="cell"></th>
 											</tr>
@@ -66,7 +97,20 @@
 												<td class="cell"><span class="truncate"><?php echo $row["make"]; ?></span></td>
 												<td class="cell"><?php echo $row["model"]; ?></td>
                                     <td class="cell"><span class="note"><?php echo $row["vin"]; ?></span></td>
-												<td class="cell"><span class="note"><?php echo $row["debt"]; ?><br><input type="text" id="dept"><br><button type="button" class="btn btn-primary" id="pay">pay</span><input type="hidden" id="vehicleid" name="vehicleid" value="<?=$row['id'] ?>"></td>
+                                    <td class="cell"><span class="note"><?php echo $row["branch"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["auction"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["lot"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["price"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["dt"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["status"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["booking_id"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["container_id"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["personal_id"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["first_name"]; ?></span></td>
+                                    <td class="cell"><span class="note"><?php echo $row["last_name"]; ?></span></td>
+												<td class="cell"><input type="hidden" id="vehicleID" value="<?php echo $row["id"]; ?>">  <button class="icon-button" id="icon-button">
+                            <i class="fas fa-info-circle"></i>
+                        </button><span class="note"><?php echo $row["debt"]; ?><br><input type="text" id="dept"><br><button type="button" class="btn btn-primary" id="pay">pay</span><input type="hidden" id="vehicleid" name="vehicleid" value="<?=$row['id'] ?>"></td>
 												<td class="cell"><a class="btn-sm app-btn-secondary edit" data-id="<?php echo $row["id"]; ?>" href="edit-vehicle.php?id=<?=$row["id"]; ?>">Edit</a><a class="btn-sm app-btn-secondary delete" data-id="<?php echo $row["id"]; ?>" href="delete_vehicle.php?id=<?=$row["id"]; ?>">Delete</a></td>
 											</tr>
 										<?php }
@@ -88,12 +132,42 @@
          <!--//app-content-->
       </div>
       <!--//app-wrapper-->    					
-      <!-- Javascript -->          
+      <!-- Javascript -->    
+       <!-- Bootstrap Modal -->
+       <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoModalLabel">Vehicle Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Comment</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modalTableBody">
+                                <!-- Data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      
       <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
       <script src="assets/plugins/popper.min.js"></script>
       <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
       <script src="assets/js/app.js"></script> 
       <script>
+     if(document.getElementById('pay')){   
       document.getElementById('pay').addEventListener('click', function(event) {
        event.preventDefault();
         var sum = document.getElementById('dept').value;
@@ -117,6 +191,40 @@
            console.log(error);
         });
     });
+
+}
+
+if(document.getElementById('icon-button')){
+    document.getElementById('icon-button').addEventListener('click', function(event) {
+      event.preventDefault();
+         const vehicleID = document.getElementById("vehicleID").value;
+         fetch(`get_vehicle_info.php?id=${vehicleID}`)
+            .then(response => response.json())
+            .then(data => {
+               const modalTableBody = document.getElementById('modalTableBody');
+                    modalTableBody.innerHTML = ''; // Clear previous content
+
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(fine => {
+                            modalTableBody.innerHTML += `
+                                <tr>
+                                    <td>${fine.debt}</td>
+                                    <td>${fine.comment}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        modalTableBody.innerHTML = '<tr><td colspan="2">No data found</td></tr>';
+                    }
+
+                    const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
+                    infoModal.show();
+            })
+            .catch(error => {
+                  console.error('Error:', error);
+            });
+         });
+        }
       </script>
    </body>
 </html>

@@ -1,8 +1,7 @@
 <div class="app-sidepanel-footer">
 				    <nav class="app-nav app-nav-footer">
 					    <ul class="app-menu footer-menu list-unstyled">
-						    <li class="nav-item">
-						        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+						    <!-- <li class="nav-item">
 						        <a class="nav-link" href="settings.html">
 							        <span class="nav-icon">
 							            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -11,9 +10,9 @@
 	</svg>
 							        </span>
 			                        <span class="nav-link-text">Settings</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-					    </ul><!--//footer-menu-->
+						        </a>
+						    </li> -->
+					    </ul>
 				    </nav>
-			    </div><!--//app-sidepanel-footer-->
+			    </div>
 				<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>				

@@ -322,6 +322,22 @@ function updateDropdownBalance() {
 
 updateDropdownBalance();
 
+function updateDebs(){
+    $.ajax({
+        url: '../get_debt.php',
+        type: 'GET',
+        success: function (response) {
+            $('#user-dropdown-toggle1').html(response);
+        },
+        error: function() {
+            alert('An error occurred while fetching the balance.');
+        }
+    });
+}
+
+updateDebs();
+
+
 $('#submitRequest').click(function () {
     var formData = $('#balanceRequestForm').serialize();
     $.ajax({

@@ -1,22 +1,21 @@
 <?php
 session_start();
 include "../db_conn.php";
-$search_term = $conn->real_escape_string($_GET['search']);
+$sql = "SELECT id, vin,make, model FROM vehicles";
+$stmt = $conn->prepare($sql);
 
-$sql = "
-    SELECT *
-    FROM vehicles
-    WHERE vin='$search_term'
-";
-
-$result = $conn->query($sql);
-
-$dealers = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $dealers[] = $row;
-    }
+if (!$stmt) {
+    die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
 }
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+$cars = [];
+while ($row = $result->fetch_assoc()) {
+    $cars[] = $row;
+}
+$stmt->close();
 $conn->close();
 if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 <!DOCTYPE html>
@@ -29,26 +28,47 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="description" content="">
+    <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
     <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
     <!-- <link rel="shortcut icon" href="favicon.ico">  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.css"> 
+    
     <!-- FontAwesome JS-->
     <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
     
     <!-- App CSS -->  
     <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
-    <style>
-
-.swiper-slide-img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: cover; /* Add this property */
-  transition: transform 0.3s ease-in-out;
-}
-</style>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+     <style>
+        .container {
+            max-width: 800px;
+            margin-top: 30px;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .image-preview {
+            max-width: 200px;
+            border: 1px solid #ddd;
+            border-radius: .25rem;
+            margin-top: 10px;
+        }
+        .status-message {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #28a745;
+            margin-top: 20px;
+        }
+    </style>
 
 </head> 
 
@@ -97,56 +117,40 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
     <div class="app-wrapper">
 	    
 	    <div class="app-content pt-3 p-md-3 p-lg-4">
-		    <!-- Search Result Page -->
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h1>Search Results</h1>
-      <p>Results for VIN: <strong><?php echo $_GET['search']; ?></strong></p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <!-- Image Slider -->
-      <div class="swiper-container">
-  <div class="swiper-wrapper">
-        <?php foreach (explode(',', $dealers[0]["image_paths"]) as $path): ?>
-            <div class="swiper-slide">
-                <img src="<?= $path ?>" alt="Vehicle Image" class="swiper-slide">
+            <div class="container">
+        <h1 class="mb-4">Add fines</h1>
+        <form action="add-fines.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<?= htmlspecialchars($vehicle['id']) ?>">
+
+            <div class="mb-3">
+                <label for="carDropdown" class="form-label">Select a car:</label>
+                <select id="carDropdown" name="car_id" class="form-select">
+                    <option value="">Select a car</option>
+                    <?php foreach ($cars as $car): ?>
+                        <option value="<?php echo htmlspecialchars($car['id']); ?>">
+                            <?php echo htmlspecialchars($car['make'] . ' ' . $car['model'] . ' ' . $car['vin']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+
             </div>
-        <?php endforeach; ?>
+
+            <div class="mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <input type="number" class="form-control" id="amount" name="amount" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comment</label>
+                <input type="text" class="form-control" id="comment" name="comment" required>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Update Vehicle</button>
+        </form>
+
     </div>
-  <div class="swiper-button-prev"></div>
-  <div class="swiper-button-next"></div>
-  <div class="swiper-pagination"></div>
-</div>
-    </div>
-    <div class="col-md-6">
-      <h2><?php echo $dealers[0]["year"]." ". $dealers[0]["make"] . " " . $dealers[0]["model"]; ?></h2>
-      <span>Price: <strong>$<?php echo $dealers[0]["price"]; ?></strong></span><br>
-      <span>Auction: <?php echo $dealers[0]["auction"]; ?></span><br>
-      <span>Lot: <?php echo $dealers[0]["lot"]; ?></span><br>
-      <span>Branch: <?php echo $dealers[0]["branch"]; ?></span><br>
-      <span>Date: <?php echo $dealers[0]["dt"]; ?></span><br>
-      <span>Status: <?php echo $dealers[0]["status"]; ?></span><br>
-      <span>Container ID: <?php echo $dealers[0]["container_id"]; ?></span><br>
-      <span>First Name: <?php echo $dealers[0]["first_name"]; ?></span><br>
-      <span>Last Name: <?php echo $dealers[0]["last_name"]; ?></span><br>
-      <span>Personal ID: <?php echo $dealers[0]["personal_id"]; ?></span><br>
-      <span>Has Key: <?php echo $dealers[0]["has_key"]; ?></span><br>
-    </div>
-        <!-- <div class="col-md-12">
-      <h3>Features</h3>
-      <ul class="list-unstyled">
-        <li><i class="fas fa-check-circle"></i> Heated Seats</li>
-        <li><i class="fas fa-check-circle"></i> Navigation System</li>
-        <li><i class="fas fa-check-circle"></i> Rearview Camera</li>
-        <li><i class="fas fa-check-circle"></i> Bluetooth Connectivity</li>
-      </ul>
-    </div> -->
-  </div>
-</div>
-	    </div><!--//app-content-->
+        </div>  
 	    
 	    
     </div><!--//app-wrapper-->    	
@@ -158,22 +162,14 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 
     <!-- Page Specific JS -->
     <script src="assets/js/app.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.js"></script>
-
-
-<!-- Initialize Swiper -->
-
-<script>
-
-  var swiper = new Swiper('.swiper-container', {
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    pagination: {
-      el: '.swiper-pagination',
-    },
-  });
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#carDropdown').select2({
+            placeholder: "Select a car",
+            allowClear: true
+        });
+    });
 </script>
 
 </body>

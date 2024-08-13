@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $vehicle_id = isset($_POST['id']) ? intval($_POST['id']) : 0;
     $paid_amount = isset($_POST['sum']) ? floatval($_POST['sum']) : 0;
      $current_debt='';
+     $zero=0;
 
     if ($vehicle_id > 0 && $paid_amount > 0) {
         // Begin transaction
@@ -47,21 +48,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
             $stmt = $conn->prepare("UPDATE users SET pbalance = pbalance - ? WHERE id = ?");
-            $stmt->bind_param("di", $paid_amount, $user_id);
+            $stmt->bind_param("di", $current_debt, $user_id);
             if (!$stmt->execute()) {
                 throw new Exception("Error updating user balance: " . $stmt->error);
             }
             $stmt->close();
 
-            
             $stmt = $conn->prepare("UPDATE vehicles SET debt = ? WHERE id = ?");
-            $stmt->bind_param("di", $remaining_debt, $vehicle_id);
+            $stmt->bind_param("ii",  $zero, $vehicle_id);
             if (!$stmt->execute()) {
                 throw new Exception("Error updating vehicle: " . $stmt->error);
             }
             $stmt->close();
-
-           
 
             // Commit transaction
             $conn->commit();

@@ -15,9 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $lot = isset($_POST['lot']) ? $_POST['lot'] : null;
     $auction = isset($_POST['auction']) ? $_POST['auction'] : '';
     $destination = isset($_POST['dest']) ? $_POST['dest'] : '';
+    $status = isset($_POST['status']) ? $_POST['status'] : '';
+    $has_key = isset($_POST['has_key']) ? $_POST['has_key'] : '';
 
     // Prepare to update vehicle details
-   $sql = "UPDATE vehicles SET make = ?, model = ?, year = ?, lot = ?, auction = ?, dest = ?, price = ?, image_paths = COALESCE(?, image_paths) WHERE id = ?";
+   $sql = "UPDATE vehicles SET make = ?, model = ?, year = ?, lot = ?, auction = ?, dest = ?, price = ?, image_paths = COALESCE(?, image_paths), status=?,has_key=? WHERE id = ?";
    $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
@@ -54,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $imagePathsStr = !empty($imagePaths) ? implode(',', $imagePaths) : null;
-    $stmt->bind_param("ssiissisi", $make, $model, $year, $lot, $auction, $destination, $price, $imagePathsStr, $id);
+    $stmt->bind_param("ssiississsi", $make, $model, $year, $lot, $auction, $destination, $price, $imagePathsStr,  $status,$has_key,$id);
 
     if ($stmt->execute()) {
         header("Location: admin.php");

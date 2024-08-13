@@ -156,6 +156,25 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
             </div>
 
             <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="Pending" <?= $vehicle['status'] == 'Pending' ? 'selected' : '' ?>>Pending</option>
+                    <option value="New" <?= $vehicle['status'] == 'New' ? 'selected' : '' ?>>New</option>
+                    <option value="Loading" <?= $vehicle['status'] == 'Loading' ? 'selected' : '' ?>>Loading</option>
+                    <option value="Arrived" <?= $vehicle['status'] == 'Arrived' ? 'selected' : '' ?>>Arrived</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="has_key" class="form-label">Has Key</label>
+                <select class="form-select" id="has_key" name="has_key">
+                    <option value="">Choose</option>
+                    <option value="Yes" <?= $vehicle['has_key'] == 'Yes' ? 'selected' : '' ?>>Yes</option>
+                    <option value="No" <?= $vehicle['status'] == 'No' ? 'selected' : '' ?>>No</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
                 <label for="images" class="form-label">Upload Images (Up to 15)</label>
                 <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/*">
                 <div class="image-preview-container" id="image-previews">

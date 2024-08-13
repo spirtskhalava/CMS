@@ -1,4 +1,11 @@
+<style>
+  #user-dropdown-toggle1{
+   color:red;
+  } 
+</style>   
 <div class="app-utility-item app-user-dropdown dropdown">
+<a id="user-dropdown-toggle1">
+</a>
 <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
     <!-- Initial content, will be updated by JavaScript -->
 </a>
