@@ -114,7 +114,7 @@
                                     <td class="cell"><span class="note"><?php echo $row["last_name"]; ?></span></td>
 												<td class="cell"><input type="hidden" data-id="<?php echo $row["id"]; ?>" value="<?php echo $row["id"]; ?>">  <button class="icon-button" id="icon-button">
                             <i class="fas fa-info-circle"></i>
-                        </button><span class="note"><?php echo $row["debt"]; ?><br><input type="text" id="dept"><br><button type="button" class="btn btn-primary" id="pay">pay</span><input type="hidden" id="vehicleid" name="vehicleid" value="<?=$row['id'] ?>"></td>
+                        </button><span class="note"><?php echo $row["debt"]; ?><br><input type="text" class="dept"><br><button type="button" class="btn btn-primary pay">pay</span><input type="hidden" name="vehicleid" data-vehicleid="<?=$row['id'] ?>"></td>
 												<td class="cell"><a class="btn-sm app-btn-secondary edit" data-id="<?php echo $row["id"]; ?>" href="edit-vehicle.php?id=<?=$row["id"]; ?>">Edit</a><a class="btn-sm app-btn-secondary delete" data-id="<?php echo $row["id"]; ?>" href="delete_vehicle.php?id=<?=$row["id"]; ?>">Delete</a></td>
 											</tr>
 										<?php }
@@ -171,34 +171,39 @@
       <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
       <script src="assets/js/app.js"></script> 
       <script>
-     if(document.getElementById('pay')){   
-      document.getElementById('pay').addEventListener('click', function(event) {
-       event.preventDefault();
-        var sum = document.getElementById('dept').value;
-        var vehicleid=document.getElementById('vehicleid').value;
-        fetch('pay.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                'id':vehicleid,
-                'sum': sum
+     if(document.getElementsByClassName('pay')){   
+        const payButtons = document.getElementsByClassName('pay');
+    
+    Array.from(payButtons).forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const deptInput = button.previousElementSibling.previousElementSibling.value;
+            const vehicleid = button.childNodes[1].dataset.vehicleid;
+            
+            fetch('pay.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'id': vehicleid,
+                    'sum': deptInput
+                })
             })
-        })
-        .then(response => response.text())
-        .then(data => {
-          location.reload();
-         console.log(data);
-        })
-        .catch(error => {
-           console.log(error);
+            .then(response => response.text())
+            .then(data => {
+                location.reload();
+                console.log(data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
         });
     });
 
 }
 
-if(document.getElementById('icon-button')){
+if(document.getElementsByClassName('icon-button')){
      const iconButtons = document.getElementsByClassName('icon-button');
     Array.from(iconButtons).forEach(button => {
         button.addEventListener('click', function(event) {

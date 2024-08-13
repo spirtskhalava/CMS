@@ -9,6 +9,8 @@ error_reporting(E_ALL);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $vehicle_id = isset($_POST['id']) ? intval($_POST['id']) : 0;
     $paid_amount = isset($_POST['sum']) ? floatval($_POST['sum']) : 0;
+    $user_id=intval($_SESSION['id']);
+    $userId=intval($_SESSION['id']);
      $current_debt='';
      $zero=0;
 
@@ -60,6 +62,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 throw new Exception("Error updating vehicle: " . $stmt->error);
             }
             $stmt->close();
+
+            $logAction = "Payment";
+            $logDetails = "User ID $userId paid $paid_amount for vehicle ID $vehicle_id";
+            $stmt = $conn->prepare("INSERT INTO logs (user_id, action, details) VALUES (?, ?, ?)");
+            if ($stmt) {
+                $stmt->bind_param("iss", $userId, $logAction, $logDetails);
+                $stmt->execute();
+                $stmt->close();
+            } else {
+                echo "Failed to prepare the log SQL statement.";
+            }
 
             // Commit transaction
             $conn->commit();
