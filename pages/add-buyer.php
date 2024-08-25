@@ -1,7 +1,7 @@
 <?php
    session_start();
    include "../db_conn.php";
-   if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
+   if (isset($_SESSION["username"]) && isset($_SESSION["id"]) && $_SESSION["role"]=="admin") { ?>
 <!DOCTYPE html>
 <html>
    <head>
@@ -17,7 +17,7 @@
       <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
       <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" rel="stylesheet">
       <!-- App CSS -->  
-      <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+      <link id="theme-style" rel="stylesheet" href="assets/css/portal.css?v=<?php echo time(); ?>">
    </head>
    <body class="app">
       <header class="app-header fixed-top">
@@ -48,7 +48,7 @@
             <select class="form-select" name="user">
             <option value="">Select User</option>
             <?php
-            $sql = "SELECT id, username FROM users";
+            $sql = "SELECT id, username FROM users WHERE role='dealer'";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                while($row = $result->fetch_assoc()) {
@@ -59,12 +59,16 @@
           </select>
             </div>
             <div class="mb-3">
-            <select class="form-select" name="auction" aria-label="Default select example" onchange="fetchAuction()">
+            <select class="form-select" name="auction" aria-label="Default select example">
             <option value="">Select Auction</option>
             <option value="Copart">Copart</option>
             <option value="IAAI">IAAI</option>
-</select>
+            </select>
             </div>
+            <div class="mb-3">
+            <input class="form-control" name="auctionuser" type="text" placeholder="Auction User" aria-label="default input example">
+            </div>
+
             <div class="mb-3">
             <input class="form-control" name="code" type="text" placeholder="Code" aria-label="default input example">
             </div>

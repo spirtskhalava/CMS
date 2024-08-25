@@ -1,10 +1,10 @@
 <?php  
 
-$sname = "localhost";
-$uname = "root";
-$password = "root";
+$sname = "sql213.infinityfree.com";
+$uname = "if0_36250918";
+$password = "jE9RlKdVRb";
 
-$db_name = "data";
+$db_name = "if0_36250918_calculator";
 
 $res = mysqli_connect($sname, $uname, $password, $db_name);
 

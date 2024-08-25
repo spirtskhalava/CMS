@@ -1,13 +1,22 @@
 <style>
-  #user-dropdown-toggle1{
+  #debt{
    color:red;
   } 
+ #balance{
+   color:green;
+   text-decoration: none;
+  } 
+  .dropdown-toggle{
+      text-decoration:none;
+  }
 </style>   
 <div class="app-utility-item app-user-dropdown dropdown">
-<a id="user-dropdown-toggle1">
-</a>
-<a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-    <!-- Initial content, will be updated by JavaScript -->
+<span id="balance"></span>
+<span id="debt"></span>
+&nbsp;
+&nbsp;
+<a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+<?php echo $_SESSION['name']; ?>
 </a>
    <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
       <li><a class="dropdown-item" href="account.php">Account</a></li>

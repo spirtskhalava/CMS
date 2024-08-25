@@ -8,6 +8,9 @@ include "db_conn.php";
         .input-group .btn i {
             font-size: 1rem;
         }
+        .submenu-link{
+            text-decoration:none;
+        }
     </style>
 <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
@@ -36,6 +39,21 @@ include "db_conn.php";
          </a>
          <!--//nav-link-->
       </li>
+      <?php if($_SESSION['role']=='admin') {?>
+     <li class="nav-item">
+         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+         <a class="nav-link" href="add-poti-images.php">
+            <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+               </svg>
+            </span>
+            <span class="nav-link-text">Images</span>
+         </a>
+         <!--//nav-link-->
+      </li> 
+      <?php }?> 
      <?php if($_SESSION['role']=='admin') {?> 
       <!--//nav-item-->
       <li class="nav-item">
@@ -52,6 +70,69 @@ include "db_conn.php";
          <!--//nav-link-->
       </li>
       <!--//nav-item-->
+      <?php }?> 
+            <?php if($_SESSION['role']=='admin') {?> 
+      <!--//nav-item-->			
+      <li class="nav-item">
+         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+         <a class="nav-link" href="discount.php">
+            <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+               </svg>
+            </span>
+            <span class="nav-link-text">Price</span>
+         </a>
+         <!--//nav-link-->
+      </li>
+      <?php } ?> 
+        <?php if($_SESSION['role']=='admin') {?> 
+      <!--//nav-item-->			
+      <li class="nav-item">
+         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+         <a class="nav-link" href="gift-history.php">
+            <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+               </svg>
+            </span>
+            <span class="nav-link-text">Discount History</span>
+         </a>
+         <!--//nav-link-->
+      </li>
+      <?php } ?> 
+          <?php if($_SESSION['role']=='admin') {?> 
+      <!--//nav-item-->			
+      <li class="nav-item">
+         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+         <a class="nav-link" href="gift.php">
+            <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+               </svg>
+            </span>
+            <span class="nav-link-text">Discount</span>
+         </a>
+         <!--//nav-link-->
+      </li>
+      <?php } ?> 
+      <?php if($_SESSION['role']=='admin' || $_SESSION['role']=='accountant' || $_SESSION['role']=='dealer') {?> 
+        <li class="nav-item">
+         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+         <a class="nav-link" href="history.php">
+            <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+               </svg>
+            </span>
+            <span class="nav-link-text">Payment History</span>
+         </a>
+         <!--//nav-link-->
+      </li>
       <?php }?> 
       <?php
         function getRequestCount($mycon) {
@@ -72,8 +153,7 @@ include "db_conn.php";
     }
 }
 
-          ?>    
-       <?php if($_SESSION['role']=='admin') {?>    
+          ?>       
        <!--//nav-item-->
        <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
@@ -88,9 +168,8 @@ include "db_conn.php";
          </a>
          <!--//nav-link-->
       </li>
-      <?php } ?> 
 
-      <?php if($_SESSION['role']=='admin') {?>  
+      <?php if($_SESSION['role']=='admin' || $_SESSION['role']=='accountant') {?>  
       <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
          <a class="nav-link" href="fines.php">
@@ -100,12 +179,45 @@ include "db_conn.php";
                   <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
                </svg>
             </span>
-            <span class="nav-link-text">Fines</span>
+            <span class="nav-link-text">Storage</span>
          </a>
          <!--//nav-link-->
       </li>
 
       <?php } ?> 
+       <?php if($_SESSION['role']=='admin' || $_SESSION['role']=='accountant') {?>  
+      <li class="nav-item">
+         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+         <a class="nav-link" href="fines_history.php">
+         <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+               </svg>
+            </span>
+            <span class="nav-link-text">Storage history</span>
+         </a>
+         <!--//nav-link-->
+      </li>
+
+      <?php } ?> 
+               <?php if($_SESSION['role']=='dealer') {?> 
+      <!--//nav-item-->			
+      <li class="nav-item">
+         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+         <a class="nav-link" href="add-vehicle.php">
+            <span class="nav-icon">
+               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+               </svg>
+            </span>
+            <span class="nav-link-text">Add Vehicle</span>
+         </a>
+         <!--//nav-link-->
+      </li>
+      <!--//nav-item-->
+       <?php } ?> 
       <!--//nav-item-->
       <li class="nav-item has-submenu">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
@@ -131,7 +243,7 @@ include "db_conn.php";
 
     // Check if $status is an integer or a string and prepare the SQL accordingly
     if (is_int($status)) {
-      if($_SESSION['role']=='admin'){
+      if($_SESSION['role']=='admin' || $_SESSION['role']=='accountant'){
          $sql = "SELECT COUNT(id) FROM vehicles WHERE status = $status";
       }else{
          $sql = "SELECT COUNT(id) FROM vehicles WHERE status = $status AND user_id = $userId";
@@ -139,7 +251,7 @@ include "db_conn.php";
     } else {
         // Assuming $status is a string, so we escape it properly
         $status = mysqli_real_escape_string($mycon, $status);
-        if($_SESSION['role']=='admin'){
+        if($_SESSION['role']=='admin' || $_SESSION['role']=='accountant'){
          $sql = "SELECT COUNT(id) FROM vehicles WHERE status = '$status'";
       }else{
          $sql = "SELECT COUNT(id) FROM vehicles WHERE status = '$status' AND user_id = $userId";
@@ -161,68 +273,15 @@ include "db_conn.php";
     }
 }
 $us_states = array(
-	'AL'=>'ALABAMA',
-	'AK'=>'ALASKA',
-	'AS'=>'AMERICAN SAMOA',
-	'AZ'=>'ARIZONA',
-	'AR'=>'ARKANSAS',
-	'CA'=>'CALIFORNIA',
-	'CO'=>'COLORADO',
-	'CT'=>'CONNECTICUT',
-	'DE'=>'DELAWARE',
-	'DC'=>'DISTRICT OF COLUMBIA',
-	'FM'=>'FEDERATED STATES OF MICRONESIA',
-	'FL'=>'FLORIDA',
-	'GA'=>'GEORGIA',
-	'GU'=>'GUAM GU',
-	'HI'=>'HAWAII',
-	'ID'=>'IDAHO',
-	'IL'=>'ILLINOIS',
-	'IN'=>'INDIANA',
-	'IA'=>'IOWA',
-	'KS'=>'KANSAS',
-	'KY'=>'KENTUCKY',
-	'LA'=>'LOUISIANA',
-	'ME'=>'MAINE',
-	'MH'=>'MARSHALL ISLANDS',
-	'MD'=>'MARYLAND',
-	'MA'=>'MASSACHUSETTS',
-	'MI'=>'MICHIGAN',
-	'MN'=>'MINNESOTA',
-	'MS'=>'MISSISSIPPI',
-	'MO'=>'MISSOURI',
-	'MT'=>'MONTANA',
-	'NE'=>'NEBRASKA',
-	'NV'=>'NEVADA',
-	'NH'=>'NEW HAMPSHIRE',
-	'NJ'=>'NEW JERSEY',
-	'NM'=>'NEW MEXICO',
-	'NY'=>'NEW YORK',
-	'NC'=>'NORTH CAROLINA',
-	'ND'=>'NORTH DAKOTA',
-	'MP'=>'NORTHERN MARIANA ISLANDS',
-	'OH'=>'OHIO',
-	'OK'=>'OKLAHOMA',
-	'OR'=>'OREGON',
-	'PW'=>'PALAU',
-	'PA'=>'PENNSYLVANIA',
-	'PR'=>'PUERTO RICO',
-	'RI'=>'RHODE ISLAND',
-	'SC'=>'SOUTH CAROLINA',
-	'SD'=>'SOUTH DAKOTA',
-	'TN'=>'TENNESSEE',
-	'TX'=>'TEXAS',
-	'UT'=>'UTAH',
-	'VT'=>'VERMONT',
-	'VI'=>'VIRGIN ISLANDS',
-	'VA'=>'VIRGINIA',
-	'WA'=>'WASHINGTON',
-	'WV'=>'WEST VIRGINIA',
-	'WI'=>'WISCONSIN',
-	'WY'=>'WYOMING',
-	'AE'=>'ARMED FORCES AFRICA \ CANADA \ EUROPE \ MIDDLE EAST',
-	'AA'=>'ARMED FORCES AMERICA (EXCEPT CANADA)',
-	'AP'=>'ARMED FORCES PACIFIC'
+	'CH'=>'CHICAGO',
+    'HO'=>'HOUSTON',
+    'LA'=>'LOS ANGELES',
+    'MI'=>'MIAMI',
+    'NY'=>'NEW YORK',
+    'NF'=>'NORFOLK',
+    'SA'=>'SAVANNAH',
+    'SEA'=>'SEATTLE',
+    'TOR'=>'TORONTO',
 );
 
           ?>                       
@@ -234,28 +293,13 @@ $us_states = array(
                <li class="submenu-item"><a class="submenu-link" href="dispached.php">Loading <?php getCount("Loading", $conn); ?></a></li>
                <li class="submenu-item"><a class="submenu-link" href="arrived.php">Arrived <?php getCount("Arrived", $conn); ?></a></li>
                <?php foreach ($us_states as $value) { 
-               echo "<li class='submenu-item'><a class='submenu-link' href='orders.php?state=".strtolower($value)."'>".$value."</a></li>";
+               echo "<li class='submenu-item'><a class='submenu-link' href='orders.php?state=".$value."'>".$value."</a></li>";
                } ?>
             </ul>
          </div>
       </li>
-      <!--//nav-item-->			
-      <li class="nav-item">
-         <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-         <a class="nav-link" href="add-vehicle.php">
-            <span class="nav-icon">
-               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
-                  <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
-               </svg>
-            </span>
-            <span class="nav-link-text">Add Vehicle</span>
-         </a>
-         <!--//nav-link-->
-      </li>
-      <!--//nav-item-->
       <!--//nav-item-->		
-      <?php if($_SESSION['role']=='admin') {?>  	
+       <?php if($_SESSION['role']=='admin') {?>  	
       <li class="nav-item">
          <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
          <a class="nav-link" href="add-buyer.php">

@@ -34,8 +34,9 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
     <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
     
     <!-- App CSS -->  
-    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
-     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css?v=<?php echo time(); ?>">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
      <style>
         .container {
             max-width: 800px;
@@ -119,6 +120,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
         <h1 class="mb-4">Edit Vehicle</h1>
         <form action="update-vehicle.php" method="post" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= htmlspecialchars($vehicle['id']) ?>">
+            <input type="hidden" name="destination" id="destination" value="<?= htmlspecialchars($vehicle['branch']) ?>">
 
             <div class="mb-3">
                 <label for="make" class="form-label">Make</label>
@@ -145,14 +147,32 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
                 <input type="number" class="form-control" id="lot" name="lot" value="<?= htmlspecialchars($vehicle['lot']) ?>" step="0.01" required>
             </div>
 
+               <div class="mb-3">
+                <label for="auction" class="form-label">Port of Load</label>
+                <input type="text" class="form-control" id="container_name" name="container_name" value="<?= htmlspecialchars($vehicle['container_name']) ?>" step="0.01" required>
+            </div>
+
              <div class="mb-3">
                 <label for="auction" class="form-label">Auction</label>
                 <input type="text" class="form-control" id="auction" name="auction" value="<?= htmlspecialchars($vehicle['auction']) ?>" step="0.01" required>
             </div>
 
             <div class="mb-3">
-                <label for="dest" class="form-label">Destionation</label>
-                <input type="text" class="form-control" id="dest" name="dest" value="<?= htmlspecialchars($vehicle['dest']) ?>" step="0.01" required>
+                <label for="dest" class="form-label">Branch</label>
+                <?php
+                 //htmlspecialchars($vehicle['branch'])
+                 ?>
+                 <select class="form-select" name="dest" id="res" aria-label="Default select example">
+                  </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="dest" class="form-label">Booking ID</label>
+                <input type="text" class="form-control" id="booking_id" name="booking_id" value="<?= htmlspecialchars($vehicle['booking_id']) ?>" step="0.01" required>
+            </div>
+            <div class="mb-3">
+                <label for="dest" class="form-label">Container ID</label>
+                <input type="text" class="form-control" id="container_id" name="container_id" value="<?= htmlspecialchars($vehicle['container_id']) ?>" step="0.01" required>
             </div>
 
             <div class="mb-3">
@@ -202,6 +222,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 
     <!-- Page Specific JS -->
     <script src="assets/js/app.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
         document.getElementById('images').addEventListener('change', function() {
             const previewContainer = document.getElementById('image-previews');
@@ -222,7 +243,45 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
             }
         });
 
-        // Show status message after form submission
+const modelDropdown = document.getElementById("res");
+const selectedBrand = document.getElementById("destination");
+
+if (modelDropdown) {
+    modelDropdown.innerHTML = "<option value=''>Select Location</option>";
+    fetch("http://artoflab.com/portal/fetch_all_auction.php?location=" + encodeURIComponent(selectedBrand.value))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok, status: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(options => {
+            if (Array.isArray(options)) {
+                options.forEach(function(optionData) {
+                    const option = document.createElement('option');
+                    option.value = optionData.value;
+                    option.textContent = optionData.text || optionData.value;
+                    if (optionData.selected) {
+                        option.selected = true;
+                    }
+
+                    modelDropdown.appendChild(option);
+                });
+            } else {
+                console.error('Unexpected format of options:', options);
+            }
+            
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    $('#res').select2({
+          placeholder: "Select a car",
+          allowClear: true
+        });
+
         if (window.location.search.indexOf('updated') > -1) {
             document.getElementById('status-message').style.display = 'block';
         }

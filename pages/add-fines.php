@@ -1,11 +1,6 @@
 <?php
 session_start();
 include "../db_conn.php";
-
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $car_id = isset($_POST['car_id']) ? intval($_POST['car_id']) : 0;
     $amount = isset($_POST['amount']) ? $_POST['amount'] : '';

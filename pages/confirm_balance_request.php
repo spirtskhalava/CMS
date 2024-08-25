@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once "../db_conn.php";
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];
 
@@ -13,10 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $stmt->get_result();
     $request = $result->fetch_assoc();
 
+    $st=10;
     // Update dealer's balance
     $sql = "UPDATE users SET pbalance = pbalance + ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("di", $request['amount'], $request['dealer_id']);
+    $stmt->bind_param("ii",$request['amount'], $request['dealer_id']);
     $stmt->execute();
 
      $_SESSION['pbalance'] += $request['amount'];

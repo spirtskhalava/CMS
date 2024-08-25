@@ -1,3 +1,8 @@
+<style>
+ body {
+    font-family: Arial, sans-serif;
+}
+</style>
 <div class="app-header-inner">
 <input type="hidden" id="userID" value="<?php echo $_SESSION['username']; ?>">
             <div class="container-fluid py-2">

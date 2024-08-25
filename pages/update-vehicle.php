@@ -1,9 +1,8 @@
 <?php
 session_start();
 include "../db_conn.php";
-
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -17,20 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $destination = isset($_POST['dest']) ? $_POST['dest'] : '';
     $status = isset($_POST['status']) ? $_POST['status'] : '';
     $has_key = isset($_POST['has_key']) ? $_POST['has_key'] : '';
+    $booking_id = isset($_POST['booking_id']) ? $_POST['booking_id'] : '';
+    $container_id = isset($_POST['container_id']) ? $_POST['container_id'] : '';
+    $container_name = isset($_POST['container_name']) ? $_POST['container_name'] : '';
 
-    // Prepare to update vehicle details
-   $sql = "UPDATE vehicles SET make = ?, model = ?, year = ?, lot = ?, auction = ?, dest = ?, price = ?, image_paths = COALESCE(?, image_paths), status=?,has_key=? WHERE id = ?";
-   $stmt = $conn->prepare($sql);
-
-    if (!$stmt) {
-        die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
-    }
-
-   // Handle image upload
+    // Handle image uploads
     $imagePaths = [];
     if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-        $allowedExtensions = array('jpg', 'jpeg', 'png', 'gif');
-        $uploadFileDir = './uploads/';
+        $apiKey = 'e59c8dbf08c9dddce376f2328ff2999b';
 
         foreach ($_FILES['images']['name'] as $key => $fileName) {
             $fileTmpPath = $_FILES['images']['tmp_name'][$key];
@@ -39,11 +32,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
-            if (in_array($fileExtension, $allowedExtensions)) {
-                $destPath = $uploadFileDir . uniqid() . '.' . $fileExtension;
+            if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://api.imgbb.com/1/upload');
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, [
+                    'image' => curl_file_create($fileTmpPath),
+                    'key' => $apiKey
+                ]);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $response = curl_exec($ch);
+                curl_close($ch);
 
-                if (move_uploaded_file($fileTmpPath, $destPath)) {
-                    $imagePaths[] = $destPath;
+                $responseArr = json_decode($response, true);
+
+                if ($responseArr['status'] === 200) {
+                    $imagePaths[] = $responseArr['data']['url'];
                 } else {
                     echo "Error uploading image: $fileName";
                     exit();
@@ -53,14 +57,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
         }
+        $imagePathsStr = !empty($imagePaths) ? implode(',', $imagePaths) : '';
+    } else {
+        $imagePathsStr = '';
     }
 
-    $imagePathsStr = !empty($imagePaths) ? implode(',', $imagePaths) : null;
-    $stmt->bind_param("ssiississsi", $make, $model, $year, $lot, $auction, $destination, $price, $imagePathsStr,  $status,$has_key,$id);
+    // Prepare the update query
+    $sql = "UPDATE vehicles SET make = ?, model = ?, year = ?, lot = ?, auction = ?, branch = ?, price = ?, image_paths = COALESCE(?, image_paths), status=?, has_key=?, booking_id=?, container_id=?,container_name=? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+    }
+
+    // Bind parameters
+    $stmt->bind_param("ssiississsiisi", $make, $model, $year, $lot, $auction, $destination, $price, $imagePathsStr, $status, $has_key, $booking_id, $container_id,$container_name,$id);
 
     if ($stmt->execute()) {
-        header("Location: admin.php");
-        exit();
+        $affectedRows = $stmt->affected_rows;
+        if ($affectedRows > 0) {
+            header("Location: admin.php");
+            exit();
+        } else {
+            echo "No rows were updated. Check if the ID is correct.";
+        }
     } else {
         echo "Error: " . $stmt->error;
     }

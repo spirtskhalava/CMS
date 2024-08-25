@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:8889
--- Generation Time: Jul 30, 2024 at 09:36 AM
--- Server version: 5.7.39
--- PHP Version: 8.2.0
+-- Host: sql213.infinityfree.com
+-- Generation Time: Aug 25, 2024 at 04:01 AM
+-- Server version: 10.6.19-MariaDB
+-- PHP Version: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,8 +19,104 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `data`
+-- Database: `if0_36250918_calculator`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `balance_requests`
+--
+
+CREATE TABLE `balance_requests` (
+  `id` int(11) NOT NULL,
+  `dealer_id` int(11) NOT NULL,
+  `request_date` date NOT NULL,
+  `amount` int(200) NOT NULL DEFAULT 0,
+  `person_name` varchar(255) NOT NULL,
+  `status` enum('pending','confirmed','rejected') DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `balance_requests`
+--
+
+INSERT INTO `balance_requests` (`id`, `dealer_id`, `request_date`, `amount`, `person_name`, `status`) VALUES
+(15, 7, '2024-08-24', 2500, 'sandro pircxalava', 'confirmed'),
+(16, 7, '2024-08-23', 2000, 'agshin ahmadzade 145212', 'pending'),
+(17, 7, '2024-08-25', 500, 'Bonus', 'pending');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `buyers`
+--
+
+CREATE TABLE `buyers` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT 0,
+  `code` int(11) NOT NULL,
+  `auction` text NOT NULL,
+  `auctionuser` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `buyers`
+--
+
+INSERT INTO `buyers` (`id`, `user_id`, `code`, `auction`, `auctionuser`) VALUES
+(1, 7, 2123423, 'Copart', 'test'),
+(2, 7, 12345, 'IAAI', 'testwerw'),
+(3, 7, 123423423, 'Copart', 'tyyy'),
+(4, 7, 23445353, 'IAAI', 'sss'),
+(5, 7, 123, 'Copart', 'test1'),
+(7, 7, 879508, 'Copart', '879508');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `consignee`
+--
+
+CREATE TABLE `consignee` (
+  `id` int(11) NOT NULL,
+  `status` text NOT NULL,
+  `firstname` text NOT NULL,
+  `lastname` text NOT NULL,
+  `country` text NOT NULL,
+  `city` text NOT NULL,
+  `address` varchar(70) NOT NULL,
+  `saddress` varchar(70) NOT NULL,
+  `zip` int(11) NOT NULL,
+  `phone` varchar(30) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `personal_id` int(11) NOT NULL,
+  `type` varchar(40) NOT NULL,
+  `comment` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `company` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `consignee`
+--
+
+INSERT INTO `consignee` (`id`, `status`, `firstname`, `lastname`, `country`, `city`, `address`, `saddress`, `zip`, `phone`, `email`, `personal_id`, `type`, `comment`, `user_id`, `company`) VALUES
+(1, 'company', 'sandro', 'pirtskhalava', 'AD', 'dsdfs', 'dsfs', 'dsf', 344, '232', 'sdfs@gmail.com', 3333, '0', 'sdfsfs', 1, ''),
+(2, 'company', '', '', 'GP', 'dsf', 'sdf 55', 'sdfsdfsd 4', 333, '3333', 'sdfs@gmail.com', 3333, 'Personal', 'sdfsfd', 1, 'sds'),
+(3, 'company', '', '', 'HU', 'dd', 'sdf', 'sdf', 444, '444', 'dfs@gmail.com', 444, 'Personal', 'ddd', 1, 'sdf'),
+(4, 'company', '', '', 'IQ', 'sdf', 'sdf', 'sdf', 4, '3', 'fsfs@gmail.com', 333, 'Personal', 'sdfs', 1, 'sdfs'),
+(5, 'company', '', '', 'AD', 'sdfs', 'asd', 'sdfs', 444, '44', 'dfsfs@gmail.com', 44, 'Personal', 'dfdgdd', 1, 'sds'),
+(6, 'company', '', '', 'AE', 'sdf', 'ssdfs 4', 'df', 333, '3333', 'sdfs@gmail.com', 34444, 'Personal', 'sfs', 1, 'sdfs'),
+(7, 'private', 'john', 'smith', 'GS', 'fsd', 'sfds 3', 'asfsdfd', 444, '444', 'sandro1211@gmail.com', 44444, 'Personal', 'sdfsfs', 1, ''),
+(8, 'private', 'abc', 'ddd', 'AO', 'ssd', 'sdfdsf 4', 'dsfsfs', 344, '4444', 'nugop61@yahoo.com', 4444, 'Personal', 'sdsfs', 1, 's'),
+(9, 'private', 'zuzu', 'asfsdfs', 'CG', 'dfd', 'dsf', 'sdfs', 444, '0', 'nugop61@yahoo.com', 33333, 'Business', 'asd', 1, ''),
+(10, 'private', 'John', 'Smith', 'AD', 'Andora', 'Test', '', 186, '555555', 'test@gmail.com', 3242, 'Personal', 'ghfhrt', 7, ''),
+(11, 'private', 'tural', 'mamedov', 'AZ', 'Baku', 'rastapovic', 'sdadasd', 10001, '834', 'turalmdasdasd', 3453, 'Personal', '', 7, ''),
+(12, 'private', 'test', 'test', 'AF', 'sdfsd', 'sdfsdsfd', 'ertdsrffgd', 123, '454444444', 'dasfs@gmail.com', 23453453, 'Personal', 'sdfsdsdf', 7, ''),
+(13, 'private', 'sandro', 'mamedov', 'AZ', 'Baku', 'rastapovich', '', 1000, '45451266', 'turallsdasd', 12541231, 'Personal', '', 7, ''),
+(14, 'private', 'tural', 'mamedov', 'AZ', 'Baku', 'rastapovich', '', 10001, '995514666683', 'turalmamedovh@gmail.com', 0, 'Personal', '', 8, 's'),
+(15, 'private', 'agshin', 'ahmadzade', 'AZ', 'Baku', 'rastapovich', '', 10001, '9595552121', 'tagshiun', 0, '', '', 7, '');
 
 -- --------------------------------------------------------
 
@@ -33,7 +130,7 @@ CREATE TABLE `containers` (
   `container_from` varchar(100) NOT NULL,
   `destination` varchar(100) NOT NULL,
   `price` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `containers`
@@ -53,21 +150,277 @@ INSERT INTO `containers` (`container_id`, `id`, `container_from`, `destination`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `datas`
+-- Table structure for table `countries`
 --
 
-CREATE TABLE `datas` (
+CREATE TABLE `countries` (
+  `country_code` char(2) NOT NULL,
+  `country_name` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `countries`
+--
+
+INSERT INTO `countries` (`country_code`, `country_name`) VALUES
+('AD', 'Andorra'),
+('AE', 'United Arab Emirates'),
+('AF', 'Afghanistan'),
+('AG', 'Antigua and Barbuda'),
+('AI', 'Anguilla'),
+('AL', 'Albania'),
+('AM', 'Armenia'),
+('AN', 'Netherlands Antilles'),
+('AO', 'Angola'),
+('AQ', 'Antarctica'),
+('AR', 'Argentina'),
+('AS', 'American Samoa'),
+('AT', 'Austria'),
+('AU', 'Australia'),
+('AW', 'Aruba'),
+('AZ', 'Azerbaijan'),
+('BA', 'Bosnia and Herzegovina'),
+('BB', 'Barbados'),
+('BD', 'Bangladesh'),
+('BE', 'Belgium'),
+('BF', 'Burkina Faso'),
+('BG', 'Bulgaria'),
+('BH', 'Bahrain'),
+('BI', 'Burundi'),
+('BJ', 'Benin'),
+('BM', 'Bermuda'),
+('BN', 'Brunei Darussalam'),
+('BO', 'Bolivia'),
+('BR', 'Brazil'),
+('BS', 'Bahamas'),
+('BT', 'Bhutan'),
+('BV', 'Bouvet Island'),
+('BW', 'Botswana'),
+('BY', 'Belarus'),
+('BZ', 'Belize'),
+('CA', 'Canada'),
+('CC', 'Cocos (Keeling) Islands'),
+('CD', 'Congo, The Democratic Republic of The'),
+('CF', 'Central African Republic'),
+('CG', 'Congo'),
+('CH', 'Switzerland'),
+('CI', 'Cote D\'ivoire'),
+('CK', 'Cook Islands'),
+('CL', 'Chile'),
+('CM', 'Cameroon'),
+('CN', 'China'),
+('CO', 'Colombia'),
+('CR', 'Costa Rica'),
+('CS', 'Serbia and Montenegro'),
+('CU', 'Cuba'),
+('CV', 'Cape Verde'),
+('CX', 'Christmas Island'),
+('CY', 'Cyprus'),
+('CZ', 'Czech Republic'),
+('DE', 'Germany'),
+('DJ', 'Djibouti'),
+('DK', 'Denmark'),
+('DM', 'Dominica'),
+('DO', 'Dominican Republic'),
+('DZ', 'Algeria'),
+('EC', 'Ecuador'),
+('EE', 'Estonia'),
+('EG', 'Egypt'),
+('EH', 'Western Sahara'),
+('ER', 'Eritrea'),
+('ES', 'Spain'),
+('ET', 'Ethiopia'),
+('FI', 'Finland'),
+('FJ', 'Fiji'),
+('FK', 'Falkland Islands (Malvinas)'),
+('FM', 'Micronesia, Federated States of'),
+('FO', 'Faroe Islands'),
+('FR', 'France'),
+('GA', 'Gabon'),
+('GB', 'United Kingdom'),
+('GD', 'Grenada'),
+('GE', 'Georgia'),
+('GF', 'French Guiana'),
+('GH', 'Ghana'),
+('GI', 'Gibraltar'),
+('GL', 'Greenland'),
+('GM', 'Gambia'),
+('GN', 'Guinea'),
+('GP', 'Guadeloupe'),
+('GQ', 'Equatorial Guinea'),
+('GR', 'Greece'),
+('GS', 'South Georgia and The South Sandwich Islands'),
+('GT', 'Guatemala'),
+('GU', 'Guam'),
+('GW', 'Guinea-bissau'),
+('GY', 'Guyana'),
+('HK', 'Hong Kong'),
+('HM', 'Heard Island and Mcdonald Islands'),
+('HN', 'Honduras'),
+('HR', 'Croatia'),
+('HT', 'Haiti'),
+('HU', 'Hungary'),
+('ID', 'Indonesia'),
+('IE', 'Ireland'),
+('IL', 'Israel'),
+('IN', 'India'),
+('IO', 'British Indian Ocean Territory'),
+('IQ', 'Iraq'),
+('IR', 'Iran, Islamic Republic of'),
+('IS', 'Iceland'),
+('IT', 'Italy'),
+('JM', 'Jamaica'),
+('JO', 'Jordan'),
+('JP', 'Japan'),
+('KE', 'Kenya'),
+('KG', 'Kyrgyzstan'),
+('KH', 'Cambodia'),
+('KI', 'Kiribati'),
+('KM', 'Comoros'),
+('KN', 'Saint Kitts and Nevis'),
+('KP', 'Korea, Democratic People\'s Republic of'),
+('KR', 'Korea, Republic of'),
+('KW', 'Kuwait'),
+('KY', 'Cayman Islands'),
+('KZ', 'Kazakhstan'),
+('LA', 'Lao People\'s Democratic Republic'),
+('LB', 'Lebanon'),
+('LC', 'Saint Lucia'),
+('LI', 'Liechtenstein'),
+('LK', 'Sri Lanka'),
+('LR', 'Liberia'),
+('LS', 'Lesotho'),
+('LT', 'Lithuania'),
+('LU', 'Luxembourg'),
+('LV', 'Latvia'),
+('LY', 'Libyan Arab Jamahiriya'),
+('MA', 'Morocco'),
+('MC', 'Monaco'),
+('MD', 'Moldova, Republic of'),
+('MG', 'Madagascar'),
+('MH', 'Marshall Islands'),
+('MK', 'Macedonia, The Former Yugoslav Republic of'),
+('ML', 'Mali'),
+('MM', 'Myanmar'),
+('MN', 'Mongolia'),
+('MO', 'Macao'),
+('MP', 'Northern Mariana Islands'),
+('MQ', 'Martinique'),
+('MR', 'Mauritania'),
+('MS', 'Montserrat'),
+('MT', 'Malta'),
+('MU', 'Mauritius'),
+('MV', 'Maldives'),
+('MW', 'Malawi'),
+('MX', 'Mexico'),
+('MY', 'Malaysia'),
+('MZ', 'Mozambique'),
+('NA', 'Namibia'),
+('NC', 'New Caledonia'),
+('NE', 'Niger'),
+('NF', 'Norfolk Island'),
+('NG', 'Nigeria'),
+('NI', 'Nicaragua'),
+('NL', 'Netherlands'),
+('NO', 'Norway'),
+('NP', 'Nepal'),
+('NR', 'Nauru'),
+('NU', 'Niue'),
+('NZ', 'New Zealand'),
+('OM', 'Oman'),
+('PA', 'Panama'),
+('PE', 'Peru'),
+('PF', 'French Polynesia'),
+('PG', 'Papua New Guinea'),
+('PH', 'Philippines'),
+('PK', 'Pakistan'),
+('PL', 'Poland'),
+('PM', 'Saint Pierre and Miquelon'),
+('PN', 'Pitcairn'),
+('PR', 'Puerto Rico'),
+('PS', 'Palestinian Territory, Occupied'),
+('PT', 'Portugal'),
+('PW', 'Palau'),
+('PY', 'Paraguay'),
+('QA', 'Qatar'),
+('RE', 'Reunion'),
+('RO', 'Romania'),
+('RU', 'Russian Federation'),
+('RW', 'Rwanda'),
+('SA', 'Saudi Arabia'),
+('SB', 'Solomon Islands'),
+('SC', 'Seychelles'),
+('SD', 'Sudan'),
+('SE', 'Sweden'),
+('SG', 'Singapore'),
+('SH', 'Saint Helena'),
+('SI', 'Slovenia'),
+('SJ', 'Svalbard and Jan Mayen'),
+('SK', 'Slovakia'),
+('SL', 'Sierra Leone'),
+('SM', 'San Marino'),
+('SN', 'Senegal'),
+('SO', 'Somalia'),
+('SR', 'Suriname'),
+('ST', 'Sao Tome and Principe'),
+('SV', 'El Salvador'),
+('SY', 'Syrian Arab Republic'),
+('SZ', 'Swaziland'),
+('TC', 'Turks and Caicos Islands'),
+('TD', 'Chad'),
+('TF', 'French Southern Territories'),
+('TG', 'Togo'),
+('TH', 'Thailand'),
+('TJ', 'Tajikistan'),
+('TK', 'Tokelau'),
+('TL', 'Timor-leste'),
+('TM', 'Turkmenistan'),
+('TN', 'Tunisia'),
+('TO', 'Tonga'),
+('TR', 'Turkey'),
+('TT', 'Trinidad and Tobago'),
+('TV', 'Tuvalu'),
+('TW', 'Taiwan, Province of China'),
+('TZ', 'Tanzania, United Republic of'),
+('UA', 'Ukraine'),
+('UG', 'Uganda'),
+('UM', 'United States Minor Outlying Islands'),
+('US', 'United States'),
+('UY', 'Uruguay'),
+('UZ', 'Uzbekistan'),
+('VA', 'Holy See (Vatican City State)'),
+('VC', 'Saint Vincent and The Grenadines'),
+('VE', 'Venezuela'),
+('VG', 'Virgin Islands, British'),
+('VI', 'Virgin Islands, U.S.'),
+('VN', 'Viet Nam'),
+('VU', 'Vanuatu'),
+('WF', 'Wallis and Futuna'),
+('WS', 'Samoa'),
+('YE', 'Yemen'),
+('YT', 'Mayotte'),
+('ZA', 'South Africa'),
+('ZM', 'Zambia'),
+('ZW', 'Zimbabwe');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `data`
+--
+
+CREATE TABLE `data` (
   `id` int(11) NOT NULL,
   `from_title` varchar(100) NOT NULL,
-  `destination_id` int(11) DEFAULT '0',
-  `price` int(11) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `destination_id` int(11) DEFAULT 0,
+  `price` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `datas`
+-- Dumping data for table `data`
 --
 
-INSERT INTO `datas` (`id`, `from_title`, `destination_id`, `price`) VALUES
+INSERT INTO `data` (`id`, `from_title`, `destination_id`, `price`) VALUES
 (1, 'EDGEWOOD - Maryland - BELAIR AUTO AUCTION', 6, 300),
 (2, 'ABILENE - Texas - Copart', 2, 350),
 (3, 'ADELANTO - California - Copart', 3, 300),
@@ -486,9 +839,163 @@ INSERT INTO `datas` (`id`, `from_title`, `destination_id`, `price`) VALUES
 (416, 'WILMINGTON - North Carolina - IAAI', 6, 375),
 (417, 'YORK SPRINGS - Pennsylvania - IAAI', 5, 275);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `discount`
+--
+
+CREATE TABLE `discount` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `discount` int(11) NOT NULL DEFAULT 0
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `discount`
+--
+
+INSERT INTO `discount` (`id`, `user_id`, `discount`) VALUES
+(1, 7, 500),
+(2, 8, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fines`
+--
+
+CREATE TABLE `fines` (
+  `id` int(11) NOT NULL,
+  `vehicle_id` int(11) NOT NULL,
+  `debt` decimal(10,0) NOT NULL DEFAULT 0,
+  `comment` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `fines`
+--
+
+INSERT INTO `fines` (`id`, `vehicle_id`, `debt`, `comment`) VALUES
+(42, 67, '1825', 'Shipping'),
+(43, 67, '100', 'test'),
+(44, 67, '20', 'test'),
+(45, 68, '1825', 'Shipping'),
+(46, 69, '1750', 'Shipping');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `details` varchar(500) DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `logs`
+--
+
+INSERT INTO `logs` (`id`, `user_id`, `action`, `details`, `timestamp`) VALUES
+(33, 0, 'DISCOUNT', '20 was gifted to root vehicle 1G11H5SL2EF143790', '2024-08-24 19:34:23'),
+(34, 7, 'Payment', 'User \'root\' paid 1000 for vehicle with VIN \'1G11H5SL2EF143790\'', '2024-08-24 20:06:30'),
+(35, 7, 'Payment', 'User \'root\' paid 825 for vehicle with VIN \'JF2SJAAC5EH529443\'', '2024-08-24 20:06:47');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `role` enum('dealer','admin','accountant') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `username` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `pbalance` int(200) NOT NULL DEFAULT 0,
+  `nbalance` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `role`, `username`, `password`, `name`, `phone`, `pbalance`, `nbalance`) VALUES
+(1, 'admin', 'sandro', 'e2fc714c4727ee9395f324cd2e7f331f', 'sandro pirtskhalava', '', 100, 0),
+(7, 'dealer', 'root', '2c6db08891fd412aaaf76587520787a9', 'root', NULL, 3325, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vehicles`
+--
+
+CREATE TABLE `vehicles` (
+  `id` int(11) NOT NULL,
+  `make` varchar(50) NOT NULL,
+  `model` varchar(50) NOT NULL,
+  `auction` varchar(50) NOT NULL,
+  `branch` varchar(80) NOT NULL,
+  `dest` text NOT NULL,
+  `vin` varchar(80) NOT NULL,
+  `year` int(11) NOT NULL,
+  `lot` int(11) NOT NULL,
+  `price` int(20) NOT NULL,
+  `dt` date NOT NULL,
+  `buyer_id` int(11) NOT NULL,
+  `consigne_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `status` text NOT NULL,
+  `image_paths` varchar(500) DEFAULT NULL,
+  `debt` int(11) DEFAULT 0,
+  `booking_id` int(100) DEFAULT 0,
+  `container_id` int(200) DEFAULT NULL,
+  `has_key` text DEFAULT NULL,
+  `container_name` text DEFAULT NULL,
+  `pickup` varchar(500) DEFAULT NULL,
+  `warehouse` varchar(500) DEFAULT NULL,
+  `georgia` varchar(500) DEFAULT NULL,
+  `insurance` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `vehicles`
+--
+
+INSERT INTO `vehicles` (`id`, `make`, `model`, `auction`, `branch`, `dest`, `vin`, `year`, `lot`, `price`, `dt`, `buyer_id`, `consigne_id`, `user_id`, `status`, `image_paths`, `debt`, `booking_id`, `container_id`, `has_key`, `container_name`, `pickup`, `warehouse`, `georgia`, `insurance`) VALUES
+(67, 'Chevrolet', 'Malibu', 'Copart', 'ABILENE - Texas - Copart', '', '1G11H5SL2EF143790', 2014, 111, 5000, '2024-08-05', 0, 11, 7, 'Pending', '', 705, 0, 0, '', 'MIAMI', NULL, NULL, NULL, 'No'),
+(68, 'Subaru', 'Forester', 'IAAI', 'BUFFALO - New York - IAAI', '', 'JF2SJAAC5EH529443', 2014, 40018263, 16000, '0000-00-00', 879508, 13, 7, 'New', 'https://i.ibb.co/YQtq2Lb/php-J5-UAe9.jpg', 1000, 0, 0, 'Yes', 'HOUSTON', NULL, NULL, NULL, 'No'),
+(69, 'BMW', '5 Series', 'Copart', 'DALLAS - Texas - Copart', '', 'WBA53BH05PWY22584', 2023, 59747704, 19000, '2024-08-22', 0, 7, 7, 'Pending', NULL, 1750, 0, 0, NULL, '', NULL, NULL, NULL, 'No');
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `balance_requests`
+--
+ALTER TABLE `balance_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `dealer_id` (`dealer_id`);
+
+--
+-- Indexes for table `buyers`
+--
+ALTER TABLE `buyers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `consignee`
+--
+ALTER TABLE `consignee`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `containers`
@@ -497,14 +1004,68 @@ ALTER TABLE `containers`
   ADD PRIMARY KEY (`container_id`);
 
 --
--- Indexes for table `datas`
+-- Indexes for table `countries`
 --
-ALTER TABLE `datas`
+ALTER TABLE `countries`
+  ADD PRIMARY KEY (`country_code`);
+
+--
+-- Indexes for table `data`
+--
+ALTER TABLE `data`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `discount`
+--
+ALTER TABLE `discount`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fines`
+--
+ALTER TABLE `fines`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vehicles`
+--
+ALTER TABLE `vehicles`
   ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `balance_requests`
+--
+ALTER TABLE `balance_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `buyers`
+--
+ALTER TABLE `buyers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `consignee`
+--
+ALTER TABLE `consignee`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `containers`
@@ -513,10 +1074,50 @@ ALTER TABLE `containers`
   MODIFY `container_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `datas`
+-- AUTO_INCREMENT for table `data`
 --
-ALTER TABLE `datas`
+ALTER TABLE `data`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=418;
+
+--
+-- AUTO_INCREMENT for table `discount`
+--
+ALTER TABLE `discount`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `fines`
+--
+ALTER TABLE `fines`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+
+--
+-- AUTO_INCREMENT for table `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `vehicles`
+--
+ALTER TABLE `vehicles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `balance_requests`
+--
+ALTER TABLE `balance_requests`
+  ADD CONSTRAINT `balance_requests_ibfk_1` FOREIGN KEY (`dealer_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,9 +1,9 @@
 <?php
 session_start();
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "data";
+$servername = "sql213.infinityfree.com";
+$username = "if0_36250918";
+$password = "jE9RlKdVRb";
+$dbname = "if0_36250918_calculator";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -15,7 +15,8 @@ if ($conn->connect_error) {
 // Fetch models based on selected brand
 if (isset($_GET["location"])) {
     $brand = $_GET["location"];
-    $sql = "SELECT * FROM datas WHERE from_title LIKE '%$brand%'";
+     $brand = $conn->real_escape_string($brand);
+    $sql = "SELECT * FROM data WHERE from_title LIKE '%$brand%'";
     $result = $conn->query($sql);
     
     $models = array();

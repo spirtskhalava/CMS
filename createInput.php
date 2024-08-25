@@ -10,7 +10,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 $param = $_GET['param'] ?? '';
-    $sql = "SELECT price FROM `datas` WHERE `from_title` = '$param'";
+    $sql = "SELECT price FROM `data` WHERE `from_title` = '$param'";
     $result = $conn->query($sql);
     
     $models = array();

@@ -2,7 +2,7 @@
    session_start();
    include "../db_conn.php";
    if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { 
-      $usernameSessionID = $_SESSION['id']; 
+      $usernameSessionID = intval($_SESSION['id']); 
       ?>
 <!DOCTYPE html>
 <html>
@@ -17,9 +17,9 @@
       <!-- <link rel="shortcut icon" href="favicon.ico">  -->
       <!-- FontAwesome JS-->
       <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" rel="stylesheet">
       <!-- App CSS -->  
       <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+          <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
    </head>
    <body class="app">
       <header class="app-header fixed-top">
@@ -50,17 +50,16 @@
                   <select class="form-select" name="auction" id="auctionVal" aria-label="Default select example" onchange="fetchAuction()">
                      <option value="Copart">Copart</option>
                      <option value="IAAI">IAAI</option>
+                     <option value="Manheim">Manheim</option>
+                     <option value="Cars.com">Cars.com</option>
                   </select>
                </div>
-               <div class="mb-3">
+               <div class="mb-3" id="branch-container">
                   <select class="form-select" name="branch" id="result" aria-label="Default select example">
                   </select>
                </div>
                <div class="mb-3">
-                  <select class="form-select" name="dest" aria-label="Default select example" disabled>
-                     <option value="POTI" selected>POTI</option>
-                     <option value="POTI">POTI</option>
-                  </select>
+                  <input class="form-control" type="text" name="dest" id="dest" value="POTI" placeholder="Destionation" aria-label="default input example" disabled>
                </div>
                <div class="input-group mb-3">
                   <input type="text" class="form-control" name="vin" id="vinInput" placeholder="Enter Vin" aria-label="Recipient's username" aria-describedby="button-addon2">
@@ -73,10 +72,10 @@
                   <input class="form-control" type="text" name="model" id="model" placeholder="Model" aria-label="default input example">
                </div>
                <div class="mb-3">
-                  <input class="form-control" type="text" id="year" name="year" placeholder="Year" aria-label="default input example">
+                  <input class="form-control" type="number" id="year" name="year" placeholder="Year" aria-label="default input example">
                </div>
                <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="Lot" name="lot" aria-label="default input example">
+                  <input class="form-control" type="number" placeholder="Lot" name="lot" aria-label="default input example">
                </div>
                <div class="mb-3">
                   <input class="form-control" type="text" placeholder="Price" name="price" aria-label="default input example">
@@ -85,25 +84,26 @@
                   <input class="form-control" type="date" placeholder="Date" name="dt" aria-label="default input example">
                </div>
                <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="Booking Number" name="booking_id" aria-label="default input example">
-               </div>
-               <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="Container Number" name="container_id" aria-label="default input example">
-               </div>
-               <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="Personal ID" name="personal_id" aria-label="default input example">
-               </div>
-               <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="First Name" name="first_name" aria-label="default input example">
-               </div>
-               <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="Last Name" name="last_name" aria-label="default input example">
-               </div>
+                <span id="tooltipTrigger" class="text-primary" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="
+                <div>
+                    <strong>Vehicle Value</strong><br>
+                    Up to $4,000: $45.00 (Total Loss), $55.00 (Full Cover)<br>
+                    $4,000 - $8,000: $65.00 (Total Loss), $75.00 (Full Cover)<br>
+                    Above $8,000: 0.75% (Total Loss), 1% (Full Cover)
+                </div>">
+                Hover for insurance detail
+            </span>
+                <select class="form-select" name="insurance" id="insurance" aria-label="Default select example">
+                     <option value="No">No</option>         
+                     <option value="loss">Total loss</option>
+                    <option value="full">Full cover</option>   
+                </select>
+               </div>   
                <div class="mb-3">
                   <select class="form-select" name="buyer">
                      <option value="">Select Buyer</option>
                      <?php
-                        $sql = "SELECT u.id, u.username FROM users u INNER JOIN buyers b ON u.id = '$usernameSessionID'";
+                        $sql = "SELECT user_id,code, auction, auctionuser FROM buyers  WHERE user_id = '$usernameSessionID'";
                         $result = $conn->query($sql);
                         
                         if (!$result) {
@@ -111,7 +111,7 @@
                         } else {
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                    echo '<option value="' . $row["id"] . '">' . $row["username"] . '</option>';
+                                    echo '<option value="' . $row["auctionuser"] . '">' . $row["auctionuser"] . ' ('. $row["auction"]. ','.$row["code"].')' . '</option>';
                                 }
                             } else {
                                 echo "No results found";
@@ -121,10 +121,10 @@
                   </select>
                </div>
                <div class="mb-3">
-                  <select class="form-select" id="consignee" name="consigne">
+                  <select class="form-select" id="consignee" name="consignee">
                      <option value="">Select Consignee</option>
                      <?php
-                        $sql = "SELECT id,company,user_id,firstname,lastname FROM consignee WHERE user_id = '$usernameSessionID'";
+                        $sql = "SELECT id,company,user_id,firstname,lastname,personal_id FROM consignee WHERE user_id = '$usernameSessionID'";
                         $result = $conn->query($sql);
                         if (!$result) {
                             echo "Error: " . $conn->error;
@@ -132,9 +132,9 @@
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     if (!empty($row["company"])) {
-                                        echo '<option value="' . $row["id"] . '">' . $row["company"] . '</option>';
+                                        echo '<option value="' . $row["id"] . '">' . $row["company"] . '('.$row["personal_id"].')'  . '</option>';
                                     }else{
-                                       echo '<option value="' . $row["id"] . '">' . $row["firstname"] . ' '.$row["lastname"] . '</option>';
+                                       echo '<option value="' . $row["id"] . '">' . $row["firstname"] . ' '.$row["lastname"] . '('.$row["personal_id"].')</option>';
                                     }
                                 }
                             } else {
@@ -284,8 +284,23 @@
       <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
       <script src="assets/plugins/popper.min.js"></script>
       <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>  
+         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
       <!-- Page Specific JS -->
-      <script src="assets/js/app.js"></script> 
+      <script src="assets/js/app.js?v=<?php echo time(); ?>"></script> 
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerEl = document.getElementById('tooltipTrigger');
+            var tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
+                html: true, // Allow HTML content in tooltip
+                placement: 'right' // Position of tooltip
+            });
+
+             $('#result').select2({
+          placeholder: "Select location",
+          allowClear: true
+        });
+        });
+        </script>
    </body>
 </html>
 <?php } else {header("Location: ../index.php");} ?>

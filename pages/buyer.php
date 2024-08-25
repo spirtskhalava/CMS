@@ -1,7 +1,9 @@
 <?php
 session_start();
 include "../db_conn.php";
-if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
+if (isset($_SESSION["username"]) && isset($_SESSION["id"]) && $_SESSION["role"]=="admin") {  
+$usernameSessionID = intval($_SESSION['id']);    
+    ?>
 <!DOCTYPE html>
 <html> 
 <head>
@@ -20,7 +22,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
     <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
     
     <!-- App CSS -->  
-    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css?v=<?php echo time(); ?>">
 
 </head> 
 
@@ -87,28 +89,25 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 										<thead>
 											<tr>
 												<th class="cell">ID</th>
-												<th class="cell">Role</th>
-												<th class="cell">Name</th>
 												<th class="cell">Username</th>
 												<th class="cell">Auction</th>
+                                                <th class="cell">Code</th>
 												<th class="cell"></th>
 											</tr>
 										</thead>
 										<tbody>
 										<?php
-                                 $sql = "SELECT users.*, buyers.* 
-								 FROM users 
-								 INNER JOIN buyers 
-								 ON users.id = buyers.user_id";
+                                $sql = "SELECT id,user_id,code, auction, auctionuser FROM buyers";
                                  $result = mysqli_query($conn, $sql);
                                  while ($row = mysqli_fetch_array($result)) { ?>	
 											<tr>
 												<td class="cell"><?php echo $row["id"]; ?></td>
-												<td class="cell"><span class="truncate"><?php echo $row["role"]; ?></span></td>
-												<td class="cell"><?php echo $row["name"]; ?></td>
-												<td class="cell"><span class="note"><?php echo $row["username"]; ?></span></td>
+												<td class="cell"><span class="note"><?php echo $row["auctionuser"]; ?></span></td>
 												<td class="cell"><span class="note"><?php echo $row["auction"]; ?></span></td>
-												<td class="cell"><a class="btn-sm app-btn-secondary" id="edit_buyer" href="#">Edit</a></td>
+                                                <td class="cell"><span class="note"><?php echo $row["code"]; ?></span></td>
+												<td class="cell">
+                                                <a data-bs-toggle="modal" data-id="<?php echo $row["id"]; ?>" data-bs-target="#exampleModal" class="btn-sm app-btn-secondary edit_buyer" id="edit_buyer" href="#">Edit</a>
+                                                </td>
 											</tr>
 										<?php }
                                            ?>
@@ -130,42 +129,42 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 	    
     </div><!--//app-wrapper-->    	
 	
-	
-	<div class="modal fade" id="buyerModal" tabindex="-1" aria-labelledby="buyerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="buyerModalLabel">Edit Record</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm">
-                    <input type="hidden" id="recordId">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name">
-                    </div>
-					<div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username">
-                    </div>
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Role</label>
-                        <select class="form-control" id="role" name="role">
-                        </select>
-                    </div>
-					<input type="hidden" id="user_id" name="user_id">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveBtn">Save changes</button>
-            </div>
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit buyer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="mb-3">
+        <input type="hidden" class="form-control" id="buyer_id">
         </div>
+        <div class="mb-3">
+        <label for="user_id" class="form-label">User ID</label>
+        <input type="text" class="form-control" id="user_id">
+        </div>
+         <div class="mb-3">
+        <label for="code" class="form-label">Code</label>
+        <input type="text" class="form-control" id="code">
+        </div>
+         <div class="mb-3">
+         <label for="user_role" class="form-label">Auction</label>
+         <select class="form-control" id="auction" name="auction">
+        </select>
+        </div>
+         <div class="mb-3">
+        <label for="auctionuser" class="form-label">Auction User</label>
+        <input type="text" class="form-control" id="auctionuser">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveBuyer">Save changes</button>
+      </div>
     </div>
+  </div>
 </div>
-
-
  
     <!-- Javascript -->          
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -173,7 +172,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
     <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>  
 
     <!-- Page Specific JS -->
-    <script src="assets/js/app.js"></script> 
+    <script src="assets/js/app.js?v=<?php echo time(); ?>""></script> 
 
 </body>
 </html>

@@ -70,82 +70,121 @@ sidePanelDrop.addEventListener('click', (e) => {
 	sidePanelToggler.click();
 });
 
-const carModels = {
-    Toyota: ["Camry", "Corolla", "RAV4", "Highlander"],
-    Honda: ["Civic", "Accord", "CR-V", "Pilot"],
-    Ford: ["F-150", "Escape", "Focus", "Explorer"]
-};
+// const carModels = {
+//     Toyota: ["Camry", "Corolla", "RAV4", "Highlander"],
+//     Honda: ["Civic", "Accord", "CR-V", "Pilot"],
+//     Ford: ["F-150", "Escape", "Focus", "Explorer"]
+// };
 
-// Function to populate models based on selected brand
-function populateModels() {
-    const brandDropdown = document.getElementById("brandDropdown");
-    const modelDropdown = document.getElementById("modelDropdown");
-    const selectedBrand = brandDropdown.value;
+// // Function to populate models based on selected brand
+// function populateModels() {
+//     const brandDropdown = document.getElementById("brandDropdown");
+//     const modelDropdown = document.getElementById("modelDropdown");
+//     const selectedBrand = brandDropdown.value;
     
-    // Clear existing options
-    modelDropdown.innerHTML = "<option value=''>Select Model</option>";
+//     // Clear existing options
+//     modelDropdown.innerHTML = "<option value=''>Select Model</option>";
     
-    // Populate models based on selected brand
-    if (selectedBrand && carModels[selectedBrand]) {
-        carModels[selectedBrand].forEach(model => {
-            const option = document.createElement("option");
-            option.value = model;
-            option.textContent = model;
-            modelDropdown.appendChild(option);
-        });
-    }
-}
+//     // Populate models based on selected brand
+//     if (selectedBrand && carModels[selectedBrand]) {
+//         carModels[selectedBrand].forEach(model => {
+//             const option = document.createElement("option");
+//             option.value = model;
+//             option.textContent = model;
+//             modelDropdown.appendChild(option);
+//         });
+//     }
+// }
 
 function fetchAuction() {
     const brandDropdown = document.getElementById("auctionVal");
-    const modelDropdown = document.getElementById("result");
-    if(brandDropdown){
-    const selectedBrand = brandDropdown.value=="" ? "copart" : brandDropdown.value;
-    modelDropdown.innerHTML = "<option value=''>Select Location</option>";
-    if (selectedBrand) {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "cms/../../fetch_auction.php?location=" + encodeURIComponent(selectedBrand), true);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                const models = JSON.parse(xhr.responseText);
-                models.forEach(model => {
-                    const option = document.createElement("option");
-                    option.value = model;
-                    option.textContent = model;
-                    modelDropdown.appendChild(option);
-                });
-            }
-        };
-        xhr.send();
+    const branchContainer = document.getElementById("branch-container");
+
+    if (brandDropdown) {
+        const selectedBrand = brandDropdown.value;
+        
+        if (selectedBrand !== 'Manheim' && selectedBrand !== 'Cars.com') {
+            // Recreate the dropdown in the branch container
+            branchContainer.innerHTML = `
+                <select class="form-select" name="branch" id="result" aria-label="Default select example">
+                    <option value=''>Select Location</option>
+                </select>
+            `;
+
+            // Get the new reference to modelDropdown
+            const modelDropdown = document.getElementById("result");
+
+            // Make the XHR call to fetch the locations
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://artoflab.com/portal/fetch_auction.php?location=" + encodeURIComponent(selectedBrand), true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const models = JSON.parse(xhr.responseText);
+                    models.forEach(model => {
+                        const option = document.createElement("option");
+                        option.value = model;
+                        option.textContent = model;
+                        modelDropdown.appendChild(option);
+                    });
+                }
+            };
+            xhr.send();
+        } else {
+            // Replace dropdown with an input field if selectedBrand is Manheim or Cars.com
+            branchContainer.innerHTML = `
+                <input type="text" class="form-control" name="branch" id="result" aria-label="Default input example">
+            `;
+        }
     }
-    }
-    
-   
 }
 fetchAuction();
 
-if (document.getElementById("result")) {
-    var dropdown = document.getElementById('result');
-    var saveForm = document.getElementById('saveForm');
-
-    // Add event listener for change event
-    dropdown.addEventListener('change', function (e) {
-        var url = 'cms/../../createInput.php?param=' + encodeURIComponent(e.target.value);
-        fetch(url)
+        if(document.getElementById('result')){
+        var dropdown = document.getElementById('result');
+        dropdown.addEventListener('change', function(event) {
+            var selectedValue = event.target.value;
+            var saveForm = document.getElementById('saveForm');
+            fetch('http://artoflab.com/portal/fetch_container.php?location=' +  selectedValue, {
+                method: 'GET',
+            })
             .then(response => response.text())
             .then(data => {
+                let arr = JSON.parse(data);
+                let city = arr[0];
                 const hiddenInput = document.createElement('input');
                 hiddenInput.type = 'hidden';
-                hiddenInput.name = 'nprice';
-                hiddenInput.value = data;
+                hiddenInput.name = 'container_name';
+                hiddenInput.value = city;
                 saveForm.appendChild(hiddenInput);
             })
             .catch(error => {
-                console.log("error", error);
+                console.error('Error:', error);
             });
+        });
+    }   
 
-    });
-}
+// if (document.getElementById("result")) {
+//     var dropdown = document.getElementById('result');
+//     var saveForm = document.getElementById('saveForm');
+
+//     // Add event listener for change event
+//     dropdown.addEventListener('change', function (e) {
+//         var url = '../../createInput.php?param=' + encodeURIComponent(e.target.value);
+//         fetch(url)
+//             .then(response => response.text())
+//             .then(data => {
+//                 const hiddenInput = document.createElement('input');
+//                 hiddenInput.type = 'hidden';
+//                 hiddenInput.name = 'nprice';
+//                 hiddenInput.value = data;
+//                 saveForm.appendChild(hiddenInput);
+//             })
+//             .catch(error => {
+//                 console.log("error", error);
+//             });
+
+//     });
+// }
 
 function lookupVIN() {
     const vinInput = document.getElementById("vinInput").value;
@@ -155,7 +194,6 @@ function lookupVIN() {
     fetch(`https://auto.dev/api/vin/${vinInput}?api_key=${apiKey}`)
     .then(response => response.json())
     .then(data => {
-    console.log("data",data);
         document.getElementById("make").value = data.make.name;
         document.getElementById("model").value = data.model.name;
         document.getElementById("year").value = data.years[0].year;
@@ -221,7 +259,7 @@ document.getElementById("saveButton").addEventListener("click", function() {
     formData.append("comment", comment);
     formData.append("user_id", user_id);
 
-    fetch("../../../cms/add-consignee.php", {
+    fetch("../../../portal/add-consignee.php", {
       method: "POST",
       body: formData
     })
@@ -258,7 +296,13 @@ $('.edit').click(function(){
         success: function(data){
             $('#name').val(data.name);
             $('#username').val(data.username);
-            $('#role').append('<option value="admin">admin</option><option value="dealer">dealer</option><option value="accountant">accountant</option>');
+            if(data.role=='admin'){
+             $('#role').append('<option value="admin" selected>admin</option><option value="dealer">dealer</option><option value="accountant">accountant</option>');   
+            }else if(data.role=='dealer'){
+                $('#role').append('<option value="admin">admin</option><option value="dealer" selected>dealer</option><option value="accountant">accountant</option>');
+            }else{
+            $('#role').append('<option value="admin">admin</option><option value="dealer">dealer</option><option value="accountant" selected>accountant</option>');
+            }
             $('#user_id').val(data.id);
             $('#editModal').modal('show');
         }
@@ -312,7 +356,7 @@ function updateDropdownBalance() {
         url: '../get_balance.php',
         type: 'GET',
         success: function (response) {
-            $('#user-dropdown-toggle').html(response);
+            $('#balance').html(response);
         },
         error: function() {
             alert('An error occurred while fetching the balance.');
@@ -327,7 +371,7 @@ function updateDebs(){
         url: '../get_debt.php',
         type: 'GET',
         success: function (response) {
-            $('#user-dropdown-toggle1').html(response);
+            $('#debt').html(response);
         },
         error: function() {
             alert('An error occurred while fetching the balance.');
@@ -349,4 +393,60 @@ $('#submitRequest').click(function () {
             window.location.reload();
         }
     });
+});
+
+//  document.querySelectorAll('.nav-link').forEach(link => {
+//     link.addEventListener('click', function(event) {
+//         console.log("clicked");
+//         document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+//         this.classList.add('active');
+//     });
+// });
+
+const elements = document.querySelectorAll('.edit_buyer');
+elements.forEach(element => {
+    element.addEventListener('click', (event) => {
+        event.preventDefault();
+        var id = event.target.dataset.id;
+        $.ajax({
+            url: 'fetch_buyer.php',
+            type: 'POST',
+            data: { id: id },
+            dataType: 'json',
+            success: function(data){
+                $('#buyer_id').val(data.id);
+                $('#user_id').val(data.user_id);
+                $('#code').val(data.code);
+                if(data.auction=="Copart"){
+                $('#auction').append('<option value="Copart" selected>Copart</option><option value="IAAI">IAAI</option>'); 
+                }else{
+                $('#auction').append('<option value="Copart">Copart</option><option value="IAAI" selected>IAAI</option>');
+                }
+                $('#auctionuser').val(data.auctionuser);
+                $('#buyerModalLabel').modal('show');
+            }
+        });
+    });
+});
+
+
+$('#saveBuyer').click(function(e){
+var data={
+     buyer_id: $('#buyer_id').val(),
+    user_id: $('#user_id').val(),
+    code: $('#code').val(),
+    auction: $('#auction').val(),
+    auctionuser: $('#auctionuser').val(),
+    }
+$.ajax({
+    url: 'add_buyer_record.php',
+    type: 'POST',
+    data: data,
+    success: function(response){
+     window.location.href = 'buyer.php';
+    },
+    error: function(xhr, status, error) {
+         alert(xhr.responseText);
+        }
+});
 });

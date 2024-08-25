@@ -20,7 +20,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
     <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
     
     <!-- App CSS -->  
-    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css?v=<?php echo time(); ?>">
 
 </head> 
 
@@ -109,80 +109,6 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 	    
 	    
     </div><!--//app-wrapper-->    	
-	
-	<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Record</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm">
-                    <input type="hidden" id="recordId">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name">
-                    </div>
-					<div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username">
-                    </div>
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Role</label>
-                        <select class="form-control" id="role" name="role">
-                        </select>
-                    </div>
-					<input type="hidden" id="user_id" name="user_id">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveBtn">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Add User</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addForm">
-
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="fname" name="fname">
-                    </div>
-					<div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="user_name" name="user_name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="user_role" class="form-label">Role</label>
-                        <select class="form-control" id="user_role" name="user_role">
-							<option value="admin">admin</option>
-							<option value="dealer">dealer</option>
-							<option value="accountant">accountant</option>
-                        </select>
-                    </div>
-					<div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="text" class="form-control" id="password" name="password">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveRecord">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
  
@@ -190,9 +116,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION["id"])) { ?>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="assets/plugins/popper.min.js"></script>
     <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>  
-
-    <!-- Page Specific JS -->
-    <script src="assets/js/app.js"></script> 
+    <script src="assets/js/app.js?v=<?php echo time(); ?>"></script>
     <script>
 $(document).ready(function(){
     // Fetch and display balance requests
@@ -201,10 +125,24 @@ $(document).ready(function(){
         type: 'GET',
         dataType: 'json',
         success: function(requests) {
+            var role = <?php echo json_encode($_SESSION['role']); ?>;
+            console.log("role",role);
             var rows = '';
             $.each(requests, function(index, request) {
                 var statusText = '';
                 var statusDisplay = 'none';
+                if(role =='dealer'){
+                  if (request.status === 'confirmed') {
+                    statusText = 'Confirmed';
+                    statusDisplay = 'inline';
+                } else if (request.status === 'rejected') {
+                    statusText = 'Rejected';
+                    statusDisplay = 'inline';
+                }else{
+                    statusText = 'Pending';
+                    statusDisplay = 'inline';
+                }
+                }else{
                 if (request.status === 'confirmed') {
                     statusText = 'Confirmed';
                     statusDisplay = 'inline';
@@ -212,6 +150,8 @@ $(document).ready(function(){
                     statusText = 'Rejected';
                     statusDisplay = 'inline';
                 }
+                }
+                
 
                 rows += '<tr>' +
                     '<td>' + request.id + '</td>' +
@@ -221,8 +161,8 @@ $(document).ready(function(){
                     '<td>' + request.person_name + '</td>' +
                     '<td>' +
                         '<div class="request-item" data-id="' + request.id + '">' +
-                            '<button class="btn btn-success confirm-btn" data-id="' + request.id + '" style="display:' + (request.status === 'pending' ? 'inline' : 'none') + ';">Confirm</button>' +
-                            '<button class="btn btn-danger reject-btn" data-id="' + request.id + '" style="display:' + (request.status === 'pending' ? 'inline' : 'none') + ';">Reject</button>' +
+                            '<button class="btn btn-success confirm-btn" data-id="' + request.id + '" style="display:' + (request.status === 'pending' && role !=='dealer' ? 'inline' : 'none') + ';">Confirm</button>' +
+                            '<button class="btn btn-danger reject-btn" data-id="' + request.id + '" style="display:' + (request.status === 'pending' && role !=='dealer' ? 'inline' : 'none') + ';">Reject</button>' +
                             '<span class="status-text" style="display:' + statusDisplay + ';">' + statusText + '</span>' +
                         '</div>' +
                     '</td>' +
